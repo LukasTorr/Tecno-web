@@ -1,0 +1,17 @@
+<div class="container text-center mt-5">
+  <h1 class="text-primary">{{ title }}</h1>
+  <p class="lead">Reserva tus películas favoritas y vive la experiencia Regal 🍿</p>
+
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-3" *ngFor="let movie of movies">
+      <div class="card shadow-sm mb-3">
+        <img [src]="movie.image" class="card-img-top" [alt]="movie.title">
+        <div class="card-body">
+          <h5 class="card-title">{{ movie.title }}</h5>
+          <p class="card-text">{{ movie.genre }} | {{ movie.duration }} min</p>
+          <button class="btn btn-warning btn-sm">Reservar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
