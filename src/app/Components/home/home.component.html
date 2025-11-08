@@ -1,17 +1,24 @@
-<div class="container text-center mt-5">
-  <h1 class="text-primary">{{ title }}</h1>
-  <p class="lead">Reserva tus películas favoritas y vive la experiencia Regal 🍿</p>
+<div class="container mt-5 text-center">
+  <h2>{{ title }}</h2>
+  <p class="lead">
+    Bienvenido, <strong>{{ auth.getUsuario()?.email }}</strong>  
+    (Rol: <span class="text-primary">{{ auth.getUsuario()?.rol | uppercase }}</span>)
+  </p>
 
   <div class="row justify-content-center mt-4">
     <div class="col-md-3" *ngFor="let movie of movies">
-      <div class="card shadow-sm mb-3">
-        <img [src]="movie.image" class="card-img-top" [alt]="movie.title">
+      <div class="card mb-4 shadow-sm">
+        <img [src]="movie.image" [alt]="movie.title" class="card-img-top rounded-top">
         <div class="card-body">
           <h5 class="card-title">{{ movie.title }}</h5>
-          <p class="card-text">{{ movie.genre }} | {{ movie.duration }} min</p>
-          <button class="btn btn-warning btn-sm">Reservar</button>
+          <p class="card-text">
+            {{ movie.genre }} | {{ movie.duration }} min
+          </p>
+          <button class="btn btn-warning">Reservar</button>
         </div>
       </div>
     </div>
   </div>
+
+  <button class="btn btn-outline-danger mt-3" (click)="logout()">Cerrar sesión</button>
 </div>
