@@ -18,6 +18,10 @@
     </div>
 
     <button class="btn btn-warning w-100" (click)="onLogin()">Ingresar</button>
+    <p class="text-center mt-3">
+    ¿No tienes una cuenta?
+    <a routerLink="/register">Regístrate aquí</a>
+    </p>
 
     <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
   </div>

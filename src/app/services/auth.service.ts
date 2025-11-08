@@ -9,14 +9,31 @@ export interface Usuario {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // 🔹 Mini "base de datos" local
-  private usuarios: Usuario[] = [
-    { email: 'admin@cine.com', password: '1234', rol: 'admin' },
-    { email: 'cliente@cine.com', password: '1234', rol: 'cliente' },
-    { email: 'lukas@cine.com', password: '1234', rol: 'cliente' }
-  ];
+  private usuarios: Usuario[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.cargarUsuarios();
+  }
+
+  private cargarUsuarios(): void {
+    const data = localStorage.getItem('usuarios');
+
+    if (data) {
+      // 👇 Si ya hay usuarios guardados, los carga del localStorage
+      this.usuarios = JSON.parse(data);
+    } else {
+      // 👇 Si no hay nada, crea los iniciales por defecto
+      this.usuarios = [
+        { email: 'admin@cine.com', password: '1234', rol: 'admin' },
+        { email: 'cliente@cine.com', password: '1234', rol: 'cliente' }
+      ];
+      localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
+    }
+  }
+
+  private guardarUsuarios(): void {
+    localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
+  }
 
   login(email: string, password: string): boolean {
     const usuario = this.usuarios.find(
@@ -28,6 +45,16 @@ export class AuthService {
       return true;
     }
     return false;
+  }
+
+  register(email: string, password: string): boolean {
+    const existe = this.usuarios.find(u => u.email === email);
+    if (existe) return false;
+
+    const nuevo: Usuario = { email, password, rol: 'cliente' };
+    this.usuarios.push(nuevo);
+    this.guardarUsuarios(); // 👈 se actualiza localStorage
+    return true;
   }
 
   logout(): void {

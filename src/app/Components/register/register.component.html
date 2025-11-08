@@ -1,1 +1,30 @@
-<p>register works!</p>
+<div class="container mt-5 col-md-4">
+  <div class="card shadow p-4">
+    <h3 class="text-center mb-3">🎟️ Crear cuenta</h3>
+
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" class="form-control" [(ngModel)]="email" />
+    </div>
+
+    <div class="mb-3">
+      <label>Contraseña</label>
+      <input type="password" class="form-control" [(ngModel)]="password" />
+    </div>
+
+    <div class="mb-3">
+      <label>Confirmar contraseña</label>
+      <input type="password" class="form-control" [(ngModel)]="confirm" />
+    </div>
+
+    <button class="btn btn-warning w-100" (click)="onRegister()">Registrarse</button>
+
+    <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
+    <div *ngIf="success" class="alert alert-success mt-3">{{ success }}</div>
+
+    <p class="text-center mt-3">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login">Inicia sesión</a>
+    </p>
+  </div>
+</div>
