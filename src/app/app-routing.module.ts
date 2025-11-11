@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CatalogoSnacksComponent } from './Components/catalogo-snacks/catalogo-snacks.component';
 import { LoginComponent } from './Components/login/login.component';
 import { HomeComponent } from './Components/home/home.component';
 import { AdminComponent } from './Components/admin/admin.component';
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent }, // 👈 nueva ruta de registro
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
+  { path: 'snacks', component: CatalogoSnacksComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/login' }
 ];

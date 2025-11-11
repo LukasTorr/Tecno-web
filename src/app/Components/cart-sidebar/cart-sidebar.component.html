@@ -1,0 +1,16 @@
+<div class="fixed top-0 right-0 w-96 h-full bg-white shadow-2xl p-4 overflow-y-auto transition-all">
+  <h2 class="text-xl font-bold mb-4">Tu carrito</h2>
+  
+  <div *ngFor="let item of items" class="flex justify-between mb-2">
+    <span>{{ item.name }}</span>
+    <span>${{ item.price }}</span>
+  </div>
+
+  <hr class="my-2" />
+  <p class="text-right font-semibold">Total: ${{ total }}</p>
+
+  <div class="mt-4 flex justify-between">
+    <button (click)="close.emit()" class="text-gray-600">Cerrar</button>
+    <button routerLink="/checkout" class="bg-blue-600 text-white px-4 py-2 rounded">Ir al pago</button>
+  </div>
+</div>

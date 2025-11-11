@@ -1,0 +1,102 @@
+/* === GRID PRINCIPAL === */
+.snack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 20px;
+}
+
+/* === TARJETAS DE PRODUCTO === */
+.snack-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.snack-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* === IMÁGENES === */
+.snack-img-container {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.snack-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.snack-img:hover {
+  transform: scale(1.05);
+}
+
+/* === TEXTOS === */
+.snack-name {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.snack-price {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* === BOTÓN AGREGAR === */
+.add-btn {
+  background-color: #2563eb; /* Azul */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #1d4ed8; /* Azul oscuro */
+}
+
+/* === BOTÓN FLOTANTE CARRITO === */
+.cart-button {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #2563eb;
+  color: white;
+  padding: 20px;
+  border: none;
+  border-radius: 50%;
+  font-size: 2rem;   /*emoji del carrito*/
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.cart-button:hover {
+  background-color: #1d4ed8;
+}
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  color: #1e3a8a; /* Azul bonito */
+}
