@@ -1,0 +1,12 @@
+<!-- perfil-usuario.component.html -->
+<div class="perfil-page">
+  <!-- Sidebar -->
+  <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
+
+  <!-- Contenido principal -->
+  <div class="perfil-content" [class.sidebar-collapsed]="isSidebarCollapsed">
+    <app-perfil-card></app-perfil-card>
+    <hr />
+    <app-perfil-tabs></app-perfil-tabs>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="perfil-reservas" *ngIf="usuario; else noUsuario">
+  <h3>🎟️ Mis Reservas</h3>
+
+  <div *ngIf="reservas.length > 0; else sinReservas">
+    <div class="reserva-card" *ngFor="let reserva of reservas">
+      <h4>{{ reserva.pelicula }}</h4>
+      <p><strong>Fecha:</strong> {{ reserva.fecha }}</p>
+      <p><strong>Hora:</strong> {{ reserva.hora }}</p>
+      <p><strong>Asientos:</strong> {{ reserva.asientos.join(", ") }}</p>
+    </div>
+  </div>
+
+  <ng-template #sinReservas>
+    <p>No tienes reservas registradas.</p>
+  </ng-template>
+</div>
+
+<ng-template #noUsuario>
+  <p>Por favor inicia sesión para ver tus reservas.</p>
+</ng-template>

@@ -1,0 +1,58 @@
+<div class="perfil-info" *ngIf="usuario; else noUsuario">
+  <h3>👤 Información del Perfil</h3>
+
+  <div class="info-section">
+    <label>ID:</label>
+    <span>{{ usuario.id }}</span>
+  </div>
+
+  <div class="info-section">
+    <label>Email:</label>
+    <input
+      *ngIf="editando"
+      [(ngModel)]="usuario.email"
+      type="email"
+      class="editable-input"
+    />
+    <span *ngIf="!editando">{{ usuario.email }}</span>
+  </div>
+
+  <div class="info-section">
+    <label>Rol:</label>
+    <span>{{ usuario.rol }}</span>
+  </div>
+
+  <div class="info-section">
+    <label>Contraseña:</label>
+    <input
+      *ngIf="editando"
+      [(ngModel)]="usuario.password"
+      type="password"
+      class="editable-input"
+    />
+    <span *ngIf="!editando">••••••••</span>
+  </div>
+
+  <div class="botones">
+    <button
+      *ngIf="!editando"
+      class="btn btn-primary"
+      (click)="activarEdicion()"
+    >
+      ✏️ Editar
+    </button>
+
+    <div *ngIf="editando" class="acciones">
+      <button class="btn btn-success" (click)="guardarCambios()">
+        💾 Guardar
+      </button>
+      <button class="btn btn-secondary" (click)="cancelar()">
+        ❌ Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noUsuario>
+  <p>Por favor inicia sesión para ver tu información.</p>
+</ng-template>

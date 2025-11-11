@@ -1,0 +1,44 @@
+.nav-tabs .nav-link {
+  color: #555;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Secciones horizontales */
+/*.perfil-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #ddd;
+}
+
+.perfil-tabs button {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: background-color 0.3s ease;
+}
+
+.perfil-tabs button:hover {
+  background-color: #eee;
+}
+
+.perfil-tabs button.active {
+  background-color: #007bff;
+  color: white;
+}*/

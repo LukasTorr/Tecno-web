@@ -1,0 +1,92 @@
+<div
+  class="sidebar-container"
+  [class.collapsed]="isCollapsed"
+  *ngIf="isLogged()"
+>
+  <!-- Botón para abrir/cerrar -->
+  <div class="toggle-btn" (click)="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </div>
+
+  <nav class="sidebar">
+    <ul>
+      <!-- 🔹 Comunes a todos los roles logueados -->
+      <li>
+        <a routerLink="/" routerLinkActive="active">
+          <i class="bi bi-house-door"></i><span>Inicio</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/perfil" routerLinkActive="active">
+          <i class="bi bi-person-circle"></i><span>Perfil</span>
+        </a>
+      </li>
+
+      <!-- 🔸 CLIENTE -->
+      <ng-container *ngIf="rol === 'cliente'">
+        <li>
+          <a routerLink="/reservas" routerLinkActive="active">
+            <i class="bi bi-ticket-detailed"></i><span>Mis Reservas</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/favoritos" routerLinkActive="active">
+            <i class="bi bi-heart"></i><span>Favoritos</span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- 🔸 ADMIN -->
+      <ng-container *ngIf="rol === 'admin'">
+        <li>
+          <a routerLink="/admin/peliculas" routerLinkActive="active">
+            <i class="bi bi-film"></i><span>Películas</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/usuarios" routerLinkActive="active">
+            <i class="bi bi-people"></i><span>Usuarios</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/config" routerLinkActive="active">
+            <i class="bi bi-gear"></i><span>Configuración</span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- 🔹 Logout -->
+      <li>
+        <a (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i><span>Cerrar sesión</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<!-- 🔒 Si no hay sesión, muestra algo opcional -->
+<div
+  class="sidebar-container no-session"
+  [class.collapsed]="isCollapsed"
+  *ngIf="!isLogged()"
+>
+  <div class="toggle-btn" (click)="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </div>
+  <nav class="sidebar">
+    <ul>
+      <li>
+        <a routerLink="/" routerLinkActive="active">
+          <i class="bi bi-house-door"></i><span>Inicio</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/login">
+          <i class="bi bi-box-arrow-in-right"></i><span>Iniciar sesión</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

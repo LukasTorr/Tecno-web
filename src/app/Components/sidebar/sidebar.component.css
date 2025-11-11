@@ -1,0 +1,106 @@
+/* Contenedor principal del sidebar */
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background: linear-gradient(180deg, #ffc108, #6c757d);
+  color: #f5f5f5;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+/* Cuando está colapsado */
+.sidebar-container.collapsed {
+  width: 80px;
+}
+
+/* Botón desplegable */
+.toggle-btn {
+  color: #ffd700;
+  font-size: 1.8rem;
+  padding: 15px;
+  cursor: pointer;
+  text-align: right;
+  transition: transform 0.3s ease;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Sidebar */
+.sidebar {
+  padding-top: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Enlaces del sidebar */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #f0f0f0;
+  text-decoration: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin: 8px 10px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+/* Iconos */
+.sidebar i {
+  font-size: 1.2rem;
+}
+
+/* Texto que se oculta al colapsar */
+.sidebar-container.collapsed span {
+  display: none;
+}
+
+/* Hover */
+.sidebar a:hover {
+  background-color: #0e6ffd;
+  color: #fff;
+  transform: translateX(5px);
+}
+
+/* Activo */
+.sidebar a.active {
+  background-color: #0e6ffd;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+/* Transición para ocultar/mostrar texto */
+.sidebar span {
+  transition: opacity 0.2s ease;
+}
+
+/* Animación suave */
+.sidebar a,
+.toggle-btn {
+  transition: all 0.3s ease;
+}
+
+.no-session {
+  background: linear-gradient(180deg, #ffc108, #6c757d);
+  color: #fff;
+}
+
+.no-session a {
+  color: #ffd700;
+}
+
+.no-session a:hover {
+  background: #6c757d;
+}

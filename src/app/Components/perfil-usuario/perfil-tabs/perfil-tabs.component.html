@@ -1,0 +1,54 @@
+<ul class="nav nav-tabs" id="perfilTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link active"
+      id="info-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#info"
+      type="button"
+      role="tab"
+    >
+      Información
+    </button>
+  </li>
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="reservas-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#reservas"
+      type="button"
+      role="tab"
+    >
+      Reservas
+    </button>
+  </li>
+
+  <li class="nav-item" role="presentation">
+    <button
+      class="nav-link"
+      id="config-tab"
+      data-bs-toggle="tab"
+      data-bs-target="#config"
+      type="button"
+      role="tab"
+    >
+      Configuración
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content mt-3" id="perfilTabsContent">
+  <div class="tab-pane fade show active" id="info" role="tabpanel">
+    <app-perfil-info></app-perfil-info>
+  </div>
+
+  <div class="tab-pane fade" id="reservas" role="tabpanel">
+    <app-perfil-reservas></app-perfil-reservas>
+  </div>
+
+  <div class="tab-pane fade" id="config" role="tabpanel">
+    <p>Configuración de la cuenta.</p>
+  </div>
+</div>
