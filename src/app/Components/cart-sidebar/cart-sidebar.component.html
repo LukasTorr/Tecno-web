@@ -1,16 +1,28 @@
-<div class="fixed top-0 right-0 w-96 h-full bg-white shadow-2xl p-4 overflow-y-auto transition-all">
-  <h2 class="text-xl font-bold mb-4">Tu carrito</h2>
-  
-  <div *ngFor="let item of items" class="flex justify-between mb-2">
-    <span>{{ item.name }}</span>
-    <span>${{ item.price }}</span>
-  </div>
+<div class="cart-items-list">
+    <div *ngFor="let item of items" class="cart-item">
+        
+        <div class="item-header-row">
+            
+            <div class="item-details-container">
+                <div class="item-image-wrapper">
+                    <img [src]="item.image" alt="{{ item.name }}" class="item-image">
+                </div>
 
-  <hr class="my-2" />
-  <p class="text-right font-semibold">Total: ${{ total }}</p>
-
-  <div class="mt-4 flex justify-between">
-    <button (click)="close.emit()" class="text-gray-600">Cerrar</button>
-    <button routerLink="/checkout" class="bg-blue-600 text-white px-4 py-2 rounded">Ir al pago</button>
-  </div>
+                <div class="item-info">
+                    <span class="item-name">{{ item.name }}</span>
+                </div>
+            </div>
+            
+            <button class="remove-item-btn">&times;</button>
+        </div>
+        
+        <div class="item-footer-row">
+            <div class="item-controls">
+                <span>-</span>
+                <input type="number" [value]="item.quantity" min="1">
+                <span>+</span>
+            </div>
+            <span class="item-price-total">${{ item.price | number }}</span>
+        </div>
+    </div>
 </div>

@@ -78,6 +78,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
+  z-index: 1001;
   background-color: #2563eb;
   color: white;
   padding: 20px;
@@ -99,4 +100,62 @@
   margin-top: 20px;
   margin-bottom: 30px;
   color: #1e3a8a; /* Azul bonito */
+}
+
+/* Este bloque debe estar en catalogo-snacks.component.css */
+app-cart-sidebar {
+  /* POSICIONAMIENTO LATERAL */
+  position: fixed; 
+  top: 0;          
+  right: 0;        
+  height: 100%;    
+  width: 384px;
+  z-index: 1000;
+  background-color: white;
+  
+  /* ANIMACIÓN */
+  transform: translateX(100%); /* Oculto inicialmente */
+  transition: transform 0.5s ease-in-out; 
+}
+
+app-cart-sidebar.open-sidebar { /* ESTA ES LA CLASE USADA EN EL HTML CON [ngClass] */
+  transform: translateX(0); /* Abierto */
+}
+
+/* --- ESTILO DEL OVERLAY (FONDO OSCURO) --- */
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.5); /* Color oscuro */
+  
+  /* Inicialmente transparente e invisible */
+  opacity: 0;
+  visibility: hidden; 
+  transition: opacity 0.3s ease-in-out, visibility 0.3s;
+}
+
+.cart-overlay.show-overlay {
+  /* Estado visible */
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- NUEVA CLASE BASE PARA BOTONES REDONDOS --- */
+.round-btn-base {
+  background-color: #2563eb; /* Azul */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Forma redonda */
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.round-btn-base:hover {
+  background-color: #1d4ed8; /* Azul oscuro */
+  transform: scale(1.1);
 }

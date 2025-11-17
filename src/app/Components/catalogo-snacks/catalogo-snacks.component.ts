@@ -20,7 +20,7 @@ export class CatalogoSnacksComponent {
     { name: 'Bebida Mediana 600ml', price: 5900, image: 'assets/image/snacks/mediumdrink.jpg' },
     { name: 'Bebida Grande 900ml', price: 6100, image: 'assets/image/snacks/largedrink.jpg' },
     { name: 'Agua 500ml ', price: 2000, image: 'assets/image/snacks/awua500.jpg' },
-    { name: '', price: 0, image: 'assets/image/snacks/.jpg' },
+    //{ name: '', price: 0, image: 'assets/image/snacks/.jpg' },
 
 
     
@@ -33,7 +33,7 @@ export class CatalogoSnacksComponent {
 
   addToCart(snack: any) {
     this.cart.addToCart(snack);
-    this.showCart = true; // se abre el carrito al agregar algo
+
   }
 
   toggleCart() {

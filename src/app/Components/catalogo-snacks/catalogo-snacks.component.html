@@ -1,9 +1,15 @@
 <!-- Catálogo de Snacks -->
- <h1 class="page-title">🍿 Catálogo de Snacks</h1>
-<div class="snack-grid">
+<h1 
+  class="page-title" 
+>
+  🍿 Catálogo de Snacks 🍿
+</h1>
+
+<div 
+  class="snack-grid" 
+>
     
-<div *ngFor="let snack of snacks" class="border rounded-xl p-3 shadow hover:shadow-lg flex flex-col items-center text-center transition-transform hover:scale-[1.02]" >    
- 
+<div *ngFor="let snack of snacks" class="snack-card" > 
     <!-- Imagen -->
     <div class="snack-img-container">
       <img [src]="snack.image" alt="{{ snack.name }}" class="snack-img" />
@@ -22,11 +28,19 @@
 
 <!-- Sidebar del carrito -->
 <app-cart-sidebar 
-  *ngIf="showCart" 
+  [ngClass]="{'open-sidebar': showCart}"
   (close)="toggleCart()"
 ></app-cart-sidebar>
 
+<div 
+  [ngClass]="{'show-overlay': showCart}" 
+  (click)="toggleCart()" 
+  class="cart-overlay"
+></div>
+
+
 <!-- Botón flotante para abrir el carrito -->
-<button class="cart-button" (click)="toggleCart()">
+<button class="cart-button round-btn-base" (click)="toggleCart()">
   🛒
 </button>
+
