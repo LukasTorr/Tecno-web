@@ -102,23 +102,22 @@
   color: #1e3a8a; /* Azul bonito */
 }
 
-/* Este bloque debe estar en catalogo-snacks.component.css */
+/* === SIDEBAR DEL CARRITO === */
 app-cart-sidebar {
   /* POSICIONAMIENTO LATERAL */
   position: fixed; 
   top: 0;          
   right: 0;        
   height: 100%;    
-  width: 384px;
+  width: 400px;
   z-index: 1000;
-  background-color: white;
   
   /* ANIMACIÓN */
   transform: translateX(100%); /* Oculto inicialmente */
-  transition: transform 0.5s ease-in-out; 
+  transition: transform 0.3s ease-in-out; 
 }
 
-app-cart-sidebar.open-sidebar { /* ESTA ES LA CLASE USADA EN EL HTML CON [ngClass] */
+app-cart-sidebar.open-sidebar {
   transform: translateX(0); /* Abierto */
 }
 

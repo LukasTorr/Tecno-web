@@ -6,12 +6,14 @@ describe('CartSidebarComponent', () => {
   let component: CartSidebarComponent;
   let fixture: ComponentFixture<CartSidebarComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async) {
     await TestBed.configureTestingModule({
       declarations: [ CartSidebarComponent ]
     })
     .compileComponents();
+  }
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(CartSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

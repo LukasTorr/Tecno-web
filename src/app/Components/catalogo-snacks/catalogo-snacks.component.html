@@ -40,7 +40,11 @@
 
 
 <!-- Botón flotante para abrir el carrito -->
-<button class="cart-button round-btn-base" (click)="toggleCart()">
+<button 
+  *ngIf="!showCart"
+  class="cart-button round-btn-base" 
+  (click)="toggleCart()"
+>
   🛒
 </button>
 
