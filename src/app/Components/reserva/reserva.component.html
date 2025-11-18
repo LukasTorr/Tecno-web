@@ -1,0 +1,25 @@
+<div class="container text-center mt-5">
+  <h2>Selecciona tus asientos</h2>
+  <p class="text-muted">Haz clic en los asientos disponibles para reservarlos</p>
+
+  <div class="sala">
+    <div *ngFor="let fila of asientos" class="fila">
+      <div
+        *ngFor="let asiento of fila"
+        class="asiento"
+        [ngClass]="{
+          'ocupado': asiento.ocupado,
+          'seleccionado': asiento.seleccionado
+        }"
+        (click)="seleccionarAsiento(asiento)">
+      </div>
+    </div>
+  </div>
+
+ <div class="pantalla mb-3 mt-4">🎬 Pantalla</div>
+
+<!-- Contenedor de botones -->
+<div class="botones mt-3">
+  <button class="btn btn-warning" (click)="reservar()">Confirmar reserva</button>
+</div>
+</div>
