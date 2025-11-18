@@ -1,17 +1,17 @@
-.perfil-card {
+.tarjeta-perfil {
   width: 20rem;
-  margin: 20px auto;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 15px;
+  padding-bottom: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
 }
 
-.perfil-card-img {
-  width: 120px;
-  height: 120px;
-  margin: 20px auto;
+.tarjeta-perfil:hover {
+  transform: scale(1.03);
 }
 
-.card-img-top {
-  object-fit: cover;
+.img-perfil {
+  width: 140px;
+  margin: 15px auto 5px;
+  border-radius: 50%;
 }

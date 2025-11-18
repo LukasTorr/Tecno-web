@@ -13,7 +13,7 @@ export class SidebarComponent {
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
   constructor(private authService: AuthService) {
-    this.usuario = this.authService.getUsuario(); // obtiene usuario logueado
+    this.usuario = this.authService.getUsuario();
   }
 
   get rol(): string | null {
@@ -33,14 +33,3 @@ export class SidebarComponent {
     return this.authService.isLogged();
   }
 }
-
-/*import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
-})
-export class SidebarComponent {
-
-}*/

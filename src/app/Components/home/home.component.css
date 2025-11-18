@@ -1,0 +1,17 @@
+h2 {
+  font-weight: bold;
+  color: #dc3545;
+}
+
+.card {
+  border-radius: 15px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.btn-warning {
+  font-weight: 600;
+}

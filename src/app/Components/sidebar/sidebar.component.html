@@ -3,14 +3,12 @@
   [class.collapsed]="isCollapsed"
   *ngIf="isLogged()"
 >
-  <!-- Botón para abrir/cerrar -->
   <div class="toggle-btn" (click)="toggleSidebar()">
     <i class="bi bi-list"></i>
   </div>
 
   <nav class="sidebar">
     <ul>
-      <!-- 🔹 Comunes a todos los roles logueados -->
       <li>
         <a routerLink="/" routerLinkActive="active">
           <i class="bi bi-house-door"></i><span>Inicio</span>
@@ -23,7 +21,6 @@
         </a>
       </li>
 
-      <!-- 🔸 CLIENTE -->
       <ng-container *ngIf="rol === 'cliente'">
         <li>
           <a routerLink="/reservas" routerLinkActive="active">
@@ -37,7 +34,6 @@
         </li>
       </ng-container>
 
-      <!-- 🔸 ADMIN -->
       <ng-container *ngIf="rol === 'admin'">
         <li>
           <a routerLink="/admin/peliculas" routerLinkActive="active">
@@ -56,7 +52,6 @@
         </li>
       </ng-container>
 
-      <!-- 🔹 Logout -->
       <li>
         <a (click)="logout()">
           <i class="bi bi-box-arrow-right"></i><span>Cerrar sesión</span>
@@ -66,7 +61,6 @@
   </nav>
 </div>
 
-<!-- 🔒 Si no hay sesión, muestra algo opcional -->
 <div
   class="sidebar-container no-session"
   [class.collapsed]="isCollapsed"

@@ -1,58 +1,53 @@
-<div class="perfil-info" *ngIf="usuario; else noUsuario">
-  <h3>👤 Información del Perfil</h3>
+<div *ngIf="usuario; else noUsuario" class="container mt-4">
+  <div
+    class="bg-white p-4 rounded-4 shadow-sm mx-auto"
+    style="max-width: 600px"
+  >
+    <h3 class="mb-4 text-center">Mis datos</h3>
 
-  <div class="info-section">
-    <label>ID:</label>
-    <span>{{ usuario.id }}</span>
-  </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <label class="fw-bold text-dark">Email:</label>
 
-  <div class="info-section">
-    <label>Email:</label>
-    <input
-      *ngIf="editando"
-      [(ngModel)]="usuario.email"
-      type="email"
-      class="editable-input"
-    />
-    <span *ngIf="!editando">{{ usuario.email }}</span>
-  </div>
+      <div class="flex-grow-1 ms-3">
+        <p class="m-0">{{ usuario.email }}</p>
+      </div>
+    </div>
 
-  <div class="info-section">
-    <label>Rol:</label>
-    <span>{{ usuario.rol }}</span>
-  </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <label class="fw-bold text-dark">Contraseña:</label>
 
-  <div class="info-section">
-    <label>Contraseña:</label>
-    <input
-      *ngIf="editando"
-      [(ngModel)]="usuario.password"
-      type="password"
-      class="editable-input"
-    />
-    <span *ngIf="!editando">••••••••</span>
-  </div>
+      <div class="flex-grow-1 ms-3">
+        <input
+          *ngIf="editando"
+          [(ngModel)]="usuario.password"
+          type="password"
+          class="form-control"
+        />
+        <p *ngIf="!editando" class="m-0">••••••••</p>
+      </div>
+    </div>
 
-  <div class="botones">
-    <button
-      *ngIf="!editando"
-      class="btn btn-primary"
-      (click)="activarEdicion()"
-    >
-      ✏️ Editar
-    </button>
-
-    <div *ngIf="editando" class="acciones">
-      <button class="btn btn-success" (click)="guardarCambios()">
-        💾 Guardar
+    <div class="mt-4 d-flex justify-content-end gap-2">
+      <button
+        *ngIf="!editando"
+        class="btn btn-primary"
+        (click)="activarEdicion()"
+      >
+        Editar
       </button>
-      <button class="btn btn-secondary" (click)="cancelar()">
-        ❌ Cancelar
-      </button>
+
+      <ng-container *ngIf="editando">
+        <button class="btn btn-success" (click)="guardarCambios()">
+          Guardar
+        </button>
+        <button class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+      </ng-container>
     </div>
   </div>
 </div>
 
 <ng-template #noUsuario>
-  <p>Por favor inicia sesión para ver tu información.</p>
+  <p class="text-center mt-4">
+    Por favor inicia sesión para ver tu información.
+  </p>
 </ng-template>

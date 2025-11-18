@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { Usuario } from 'src/app/models/usuario.model';
 
@@ -8,18 +8,13 @@ import { Usuario } from 'src/app/models/usuario.model';
   styleUrls: ['./perfil-reservas.component.css'],
 })
 export class PerfilReservasComponent implements OnInit {
-  usuario: Usuario | null = null;
-  reservas: any[] = []; // Aquí podrías tener un modelo real de reservas
+  @Input() usuario: Usuario | null = null;
+  reservas: any[] = [];
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Obtiene el usuario logueado
-    this.usuario = this.authService.getUsuario();
-
     if (this.usuario) {
-      // En un caso real podrías obtener las reservas desde un servicio HTTP o LocalStorage
-      // Aquí colocamos datos simulados como ejemplo:
       this.reservas = [
         {
           id: 1,

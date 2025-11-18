@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms'; // 👈 agregado para [(ngModel)] en el login
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,12 +12,17 @@ import { PerfilCardComponent } from './Components/perfil-usuario/perfil-card/per
 import { PerfilTabsComponent } from './Components/perfil-usuario/perfil-tabs/perfil-tabs.component';
 import { PerfilInfoComponent } from './Components/perfil-usuario/perfil-info/perfil-info.component';
 import { PerfilReservasComponent } from './Components/perfil-usuario/perfil-reservas/perfil-reservas.component';
-import { FormsModule } from '@angular/forms';
+import { LoginComponent } from './Components/login/login.component';
+import { AdminComponent } from './Components/admin/admin.component';
+import { RegisterComponent } from './Components/register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    LoginComponent,
+    AdminComponent,
+    RegisterComponent,
     PerfilUsuarioComponent,
     SidebarComponent,
     PerfilCardComponent,
@@ -24,7 +30,13 @@ import { FormsModule } from '@angular/forms';
     PerfilInfoComponent,
     PerfilReservasComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, FormsModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule, // 👈 agregado aquí,
+    ReactiveFormsModule,
+    FormsModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

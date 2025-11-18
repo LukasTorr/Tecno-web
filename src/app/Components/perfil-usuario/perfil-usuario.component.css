@@ -1,45 +1,20 @@
-.perfil-page {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f9fafb;
+.content-area {
   transition: all 0.3s ease;
+  margin-left: 240px;
 }
 
-/* Ajuste para que el contenido no quede debajo del sidebar */
-.perfil-content {
-  flex: 1;
-  margin-left: 240px; /* ancho normal del sidebar */
-  padding: 20px;
-  transition: margin-left 0.3s ease;
+.content-area.collapsed {
+  margin-left: 70px;
 }
 
-/* Si sidebar es colapsable, puedes ajustar con media queries */
 @media (max-width: 768px) {
-  .perfil-content {
-    margin-left: 0; /* ancho reducido */
+  .content-area {
+    margin-left: 0 !important;
   }
-}
 
-.perfil-section {
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Cuando el sidebar está colapsado */
-.perfil-content.collapsed {
-  margin-left: 70px; /* ancho reducido */
-}
-
-/* Cuando el sidebar está cerrado */
-.sidebar-cerrado app-sidebar {
-  width: 0;
-  overflow: hidden;
-}
-
-.sidebar-cerrado .perfil-content {
-  margin-left: 0;
+  .content-area.collapsed {
+    margin-left: 0 !important;
+  }
 }
 
 .reserva-card {
@@ -54,8 +29,7 @@
 }
 
 .reserva-card:hover {
-  background-color: #f5f5f5; /* color de fondo al pasar el mouse */
-  transform: translateY(-5px); /* un pequeño "salto" opcional */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* sombra más marcada */
-  transition: all 0.3s ease;
+  background-color: #f5f5f5;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }

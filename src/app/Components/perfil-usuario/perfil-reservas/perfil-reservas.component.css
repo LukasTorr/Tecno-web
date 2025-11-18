@@ -1,32 +1,8 @@
-.perfil-reservas {
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
-  max-width: 600px;
-}
-
 .reserva-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .reserva-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-h3 {
-  color: #444;
-  margin-bottom: 15px;
-}
-
-h4 {
-  color: #222;
-  margin-bottom: 5px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-perfil-tabs',
@@ -6,6 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./perfil-tabs.component.css'],
 })
 export class PerfilTabsComponent {
+  @Input() usuario: Usuario | null = null;
   seccionActiva = 'info';
 
   cambiarSeccion(seccion: string) {

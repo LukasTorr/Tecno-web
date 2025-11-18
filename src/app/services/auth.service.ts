@@ -55,12 +55,17 @@ export class AuthService {
     return true;
   }
 
-  actualizarPassword(email: string, nuevaPassword: string) {
-    const usuario = this.usuarios.find((u) => u.email === email);
-    if (usuario) {
-      usuario.password = nuevaPassword;
-      this.guardarUsuarios();
+  actualizarUsuario(usuarioActualizado: Usuario): void {
+    const lista = this.getUsuarios();
+    const index = lista.findIndex((u) => u.id === usuarioActualizado.id);
+
+    if (index !== -1) {
+      lista[index] = usuarioActualizado;
     }
+
+    localStorage.setItem('usuarios', JSON.stringify(lista));
+
+    localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
   }
 
   logout(): void {
@@ -73,6 +78,10 @@ export class AuthService {
     return u ? JSON.parse(u) : null;
   }
 
+  getUsuarios(): Usuario[] {
+    return this.usuarios;
+  }
+
   getRol(): string | null {
     const u = this.getUsuario();
     return u ? u.rol : null;
@@ -82,14 +91,3 @@ export class AuthService {
     return !!localStorage.getItem('usuario');
   }
 }
-
-/*
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-
-  constructor() { }
-}*/
