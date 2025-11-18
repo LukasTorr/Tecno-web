@@ -47,11 +47,11 @@
 .botones {
   display: flex;
   justify-content: center;
-  gap: 20px;        /* separación entre los botones */
+  gap: 20px;        
   margin-top: 20px;
 }
 
 .botones .btn {
-  min-width: 160px;  /* ancho mínimo para que queden parejos */
+  min-width: 160px;  
   font-weight: 600;
 }

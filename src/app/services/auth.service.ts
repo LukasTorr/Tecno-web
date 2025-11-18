@@ -53,7 +53,7 @@ export class AuthService {
 
     const nuevo: Usuario = { email, password, rol: 'cliente' };
     this.usuarios.push(nuevo);
-    this.guardarUsuarios(); // 👈 se actualiza localStorage
+    this.guardarUsuarios(); 
     return true;
   }
 
