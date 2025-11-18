@@ -2,12 +2,17 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; // 👈 agregado para [(ngModel)] en el login
 
+
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './Components/home/home.component';
 import { LoginComponent } from './Components/login/login.component';
 import { AdminComponent } from './Components/admin/admin.component';
 import { RegisterComponent } from './Components/register/register.component';
+import { ReservaComponent } from './Components/reserva/reserva.component';
+
+
 
 @NgModule({
   declarations: [
@@ -15,12 +20,16 @@ import { RegisterComponent } from './Components/register/register.component';
     HomeComponent,
     LoginComponent,
     AdminComponent,
-    RegisterComponent
+    RegisterComponent,
+    ReservaComponent
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule // 👈 agregado aquí
+    FormsModule, // 👈 agregado aquí
+
+  
   ],
   providers: [],
   bootstrap: [AppComponent]
