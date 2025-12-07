@@ -1,0 +1,10 @@
+.metodo-card {
+  max-width: 450px;
+  margin: auto;
+  border-radius: 15px;
+}
+
+.tarjeta-icon {
+  font-size: 3rem;
+  color: #0d6efd;
+}

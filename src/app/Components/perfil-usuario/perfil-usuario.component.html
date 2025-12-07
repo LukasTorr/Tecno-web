@@ -6,7 +6,7 @@
     [class.expanded]="!isSidebarCollapsed"
     [class.collapsed]="isSidebarCollapsed"
   >
-    <app-perfil-card [usuario]="usuario"></app-perfil-card>
+    <app-perfil-card *ngIf="usuario" [usuario]="usuario"></app-perfil-card>
 
     <hr />
 

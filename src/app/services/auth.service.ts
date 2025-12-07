@@ -55,17 +55,17 @@ export class AuthService {
     return true;
   }
 
-  actualizarUsuario(usuarioActualizado: Usuario): void {
-    const lista = this.getUsuarios();
-    const index = lista.findIndex((u) => u.id === usuarioActualizado.id);
-
-    if (index !== -1) {
-      lista[index] = usuarioActualizado;
-    }
-
-    localStorage.setItem('usuarios', JSON.stringify(lista));
-
+  actualizarUsuario(usuarioActualizado: Usuario) {
     localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
+
+    // Actualizar también la lista completa de usuarios
+    const index = this.usuarios.findIndex(
+      (u) => u.id === usuarioActualizado.id
+    );
+    if (index !== -1) {
+      this.usuarios[index] = usuarioActualizado;
+      this.guardarUsuarios();
+    }
   }
 
   logout(): void {

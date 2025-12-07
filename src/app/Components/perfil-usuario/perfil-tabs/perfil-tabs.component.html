@@ -28,13 +28,13 @@
   <li class="nav-item" role="presentation">
     <button
       class="nav-link"
-      id="config-tab"
+      id="metodoPago-tab"
       data-bs-toggle="tab"
-      data-bs-target="#config"
+      data-bs-target="#metodoPago"
       type="button"
       role="tab"
     >
-      Configuración
+      Metodos de Pago
     </button>
   </li>
 </ul>
@@ -48,7 +48,7 @@
     <app-perfil-reservas [usuario]="usuario"></app-perfil-reservas>
   </div>
 
-  <div class="tab-pane fade" id="config" role="tabpanel">
-    <p>Configuración de la cuenta.</p>
+  <div class="tab-pane fade" id="metodoPago" role="tabpanel">
+    <app-metodos-pago></app-metodos-pago>
   </div>
 </div>
