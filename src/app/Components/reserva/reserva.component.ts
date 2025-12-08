@@ -83,7 +83,7 @@ export class ReservaComponent implements OnInit {
   obtenerReservas(): any[] {
     return JSON.parse(localStorage.getItem('reservas') || '[]');
   }
-
+ 
   cargarReservas(): void {
     const reservas = this.obtenerReservas();
     const reservasPelicula = reservas.filter(r => r.movie === this.tituloPelicula);
