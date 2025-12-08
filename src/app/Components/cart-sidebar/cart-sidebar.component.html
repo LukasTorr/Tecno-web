@@ -1,0 +1,45 @@
+<div class="cart-container">
+  <div class="cart-header">
+    <h2 class="cart-title">Mi Carrito</h2>
+    <button class="close-btn" (click)="close.emit()">&times;</button>
+  </div>
+
+  <div class="cart-items">
+    <div *ngIf="items.length === 0" class="empty-cart">
+      <p>Tu carrito está vacío</p>
+    </div>
+    
+    <div *ngFor="let item of items" class="cart-item">
+      <img [src]="item.image" alt="{{ item.name }}" class="item-image">
+      
+      <div class="item-info">
+        <h3 class="item-name">{{ item.name }}</h3>
+        <p class="item-price">${{ item.price | number: '1.0-0' }}</p>
+      </div>
+      
+      <div class="item-controls">
+        <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity - 1)">−</button>
+        <input type="number" [value]="item.quantity" class="qty-input" #qtyInput (change)="updateQuantity(item.id, +qtyInput.value)">
+        <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity + 1)">+</button>
+      </div>
+
+      <div class="item-subtotal">
+        <span>${{ (item.price * item.quantity) | number: '1.0-0' }}</span>
+      </div>
+      
+      <button class="remove-btn" (click)="removeItem(item.id)">&times;</button>
+    </div>
+  </div>
+
+  <div *ngIf="items.length > 0" class="cart-footer">
+    <div class="cart-total">
+      <span class="total-label">Total:</span>
+      <span class="total-amount">${{ total | number: '1.0-0' }}</span>
+    </div>
+    
+    <div class="cart-actions">
+      <button class="clear-btn" (click)="clearCart()">Vaciar Carrito</button>
+      <button class="checkout-btn" (click)="checkout()">Comprar Ahora</button>
+    </div>
+  </div>
+</div>
