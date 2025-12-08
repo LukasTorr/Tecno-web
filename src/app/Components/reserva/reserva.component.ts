@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router'; // 👈 Importar Router
+import { Location } from '@angular/common'; // 👈 Importar Location
 
 interface Asiento {
   fila: number;
@@ -20,7 +21,12 @@ export class ReservaComponent implements OnInit {
   columnas = 10;
   asientos: Asiento[][] = [];
 
-  constructor(private route: ActivatedRoute) {}
+  // Inyectar Location y Router en el constructor
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router, // 👈 Inyección del Router
+    private location: Location // 👈 Inyección del Location
+  ) {}
 
   ngOnInit(): void {
     
@@ -30,6 +36,7 @@ export class ReservaComponent implements OnInit {
       this.cargarReservas();
     });
   }
+  // ... (generarAsientos, seleccionarAsiento, reservar, obtenerReservas, cargarReservas sin cambios)
 
   generarAsientos(): void {
     this.asientos = [];
@@ -96,4 +103,15 @@ export class ReservaComponent implements OnInit {
     });
   }
 
+  // 👇 NUEVOS MÉTODOS DE NAVEGACIÓN
+
+  // Navega a la página de snacks (asumiendo que la ruta es '/snacks' como resolvimos en el merge)
+  irAComprarSnacks(): void {
+    this.router.navigate(['/snacks']);
+  }
+
+  // Vuelve a la URL anterior en el historial del navegador
+  volverAtras(): void {
+    this.location.back();
+  }
 }

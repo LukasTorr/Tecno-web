@@ -1,28 +1,36 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-// 👈 Mantener CatalogoSnacksComponent de CompraSnacks
+// Componentes de ambas ramas
 import { CatalogoSnacksComponent } from './Components/catalogo-snacks/catalogo-snacks.component';
 import { LoginComponent } from './Components/login/login.component';
 import { HomeComponent } from './Components/home/home.component';
 import { AdminComponent } from './Components/admin/admin.component';
-// Mantener RegisterComponent
 import { RegisterComponent } from './Components/register/register.component'; 
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
-// 👈 Mantener ReservaComponent de master
 import { ReservaComponent } from './Components/reserva/reserva.component';
 
 
 const routes: Routes = [
+  // Rutas de Acceso Público
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent }, 
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  
+  // 🔓 PÚBLICO: La página HOME ahora es accesible sin AuthGuard
+  { path: 'home', component: HomeComponent },
+  
+  // Catálogo de Snacks: Acceso libre
+  { path: 'snacks', component: CatalogoSnacksComponent }, 
+  
+  // 🔒 PROTEGIDO: Rutas que REQUIEREN iniciar sesión
   { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
-  // 👇 Combinación de rutas
-  { path: 'snacks', component: CatalogoSnacksComponent }, // Agregado de CompraSnacks
-  { path: 'reserva', component: ReservaComponent }, // Agregado de master
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' },
+  { path: 'reserva', component: ReservaComponent, canActivate: [AuthGuard] }, 
+  
+  // 🏠 INICIO: La aplicación redirige a '/home' al iniciar
+  { path: '', redirectTo: '/home', pathMatch: 'full' }, 
+  
+  // Redirección para rutas no encontradas
+  { path: '**', redirectTo: '/home' },
  
 ];
 

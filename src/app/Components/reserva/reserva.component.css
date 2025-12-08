@@ -55,3 +55,8 @@
   min-width: 160px;  
   font-weight: 600;
 }
+
+/* 👇 NUEVO ESTILO: Para el botón de volver */
+.btn-sm {
+  min-width: unset !important;
+}
