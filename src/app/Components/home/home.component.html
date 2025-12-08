@@ -17,29 +17,41 @@
     </div>
   </div>
 </header>
-<div class="container mt-5 text-center">
+<div class="container mt-5">
   
   <h2>Películas en cartelera</h2>
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-3" *ngFor="let movie of movies">
-      <div class="card mb-4 shadow-sm">
-        <img [src]="movie.image" [alt]="movie.title" class="card-img-top rounded-top">
-        <div class="card-body">
-          <h5 class="card-title">{{ movie.title }}</h5>
-          <p class="card-text">
-            {{ movie.genre }} | {{ movie.duration }} min
-          </p>
-          <button 
-            class="btn btn-warning" 
-            (click)="onReservar(movie.title)">
-            Reservar
-          </button>
+  
+  <div class="movies-carousel-container">
+    <div class="movies-carousel-track">
+      <div class="movie-card-wrapper" *ngFor="let movie of movies">
+        <div class="card mb-4 shadow-sm h-100">
+          <img [src]="movie.image" [alt]="movie.title" class="card-img-top movie-poster">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ movie.title }}</h5>
+            <p class="card-text text-muted mb-3">
+              {{ movie.genre }} | {{ movie.duration }} min
+            </p>
+            
+            <div class="mt-auto">
+              <h6 class="text-start mb-2">Horarios:</h6>
+              <div class="d-flex flex-wrap gap-2 justify-content-start">
+                <button
+                  *ngFor="let session of movie.sessions"
+                  class="btn btn-sm btn-outline-warning session-btn"
+                  title="Sala: {{ session.sala }}"
+                  (click)="onReservar(movie.title, session.sala, session.hora)">
+                  {{ session.hora }}
+                </button>
+              </div>
+            </div>
+            </div>
         </div>
       </div>
     </div>
   </div>
 
-  </div>
+</div>
+
 <div class="login-modal-overlay" *ngIf="showLoginModal">
   <div class="login-modal">
     <div class="card shadow p-4">
@@ -62,12 +74,14 @@
       </div>
 
       <button class="btn btn-warning w-100" (click)="handleLoginFromModal()">Ingresar</button>
+      
+      <div *ngIf="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
+
       <p class="text-center mt-3">
-      ¿No tienes una cuenta?
-      <a routerLink="/register" (click)="closeLoginModal()">Regístrate aquí</a>
+        ¿No tienes una cuenta?
+        <a routerLink="/register">Regístrate aquí</a>
       </p>
 
-      <div *ngIf="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
     </div>
   </div>
 </div>

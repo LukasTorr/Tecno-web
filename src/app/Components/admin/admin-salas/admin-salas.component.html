@@ -1,0 +1,32 @@
+<div class="mt-4">
+    <h3>Gestión de Salas de Cine</h3>
+    <p class="text-muted">Configura las salas, su capacidad y formato.</p>
+
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success">➕ Crear Nueva Sala</button>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Capacidad</th>
+                <th>Formato</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let sala of salas">
+                <td>{{ sala.id }}</td>
+                <td>{{ sala.nombre }}</td>
+                <td>{{ sala.capacidad }} asientos</td>
+                <td>{{ sala.formato }}</td>
+                <td>
+                    <button class="btn btn-sm btn-info me-2">Editar</button>
+                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

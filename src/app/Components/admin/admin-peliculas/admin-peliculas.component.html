@@ -1,0 +1,34 @@
+<div class="mt-4">
+    <h3>Gestión de Catálogo de Películas</h3>
+    <p class="text-muted">Añade, edita o retira películas de cartelera.</p>
+
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success">➕ Agregar Nueva Película</button>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Género</th>
+                <th>Duración (min)</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let peli of peliculas">
+                <td>{{ peli.id }}</td>
+                <td>{{ peli.titulo }}</td>
+                <td>{{ peli.genero }}</td>
+                <td>{{ peli.duracion }}</td>
+                <td>{{ peli.estado }}</td>
+                <td>
+                    <button class="btn btn-sm btn-info me-2">Editar</button>
+                    <button class="btn btn-sm btn-warning">Retirar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
