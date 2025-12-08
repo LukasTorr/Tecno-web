@@ -14,7 +14,7 @@
           <p class="card-text">
             {{ movie.genre }} | {{ movie.duration }} min
           </p>
-          <button class="btn btn-warning">Reservar</button>
+          <button class="btn btn-warning" [routerLink]="['/reserva']"[queryParams]="{ movie: movie.title }">Reservar</button>
         </div>
       </div>
     </div>
