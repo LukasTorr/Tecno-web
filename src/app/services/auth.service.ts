@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcryptjs'; // Asegúrate de que esta línea esté presente
 
 export interface Usuario {
   email: string;
@@ -15,21 +15,21 @@ export class AuthService {
   private readonly defaultPassword = '1234'; 
 
   constructor(private router: Router) {
-    // Llamada SÍNCRONA directa en el constructor
+    // La carga del array de usuarios (hashes) debe ser lo primero.
     this.cargarUsuarios(); 
   }
   
-  // Lógica SÍNCRONA y robusta para cargar usuarios y re-hashear
+  // Lógica SÍNCRONA para cargar y auto-reparar el ARRAY DE USUARIOS (almacenado en localStorage)
   private cargarUsuarios(): void {
-    const data = localStorage.getItem('usuarios');
+    // 🚨 Usamos localStorage para el ARRAY COMPLETO DE HASHES (para persistencia entre reinicios)
+    const data = localStorage.getItem('usuarios'); 
     let needsSaving = false;
 
     if (data) {
       this.usuarios = JSON.parse(data);
       
-      // 🚨 CORRECCIÓN FINAL: Chequea si la contraseña es sospechosa (no es hash)
+      // Chequeo de contraseñas rotas o sin hashear (auto-reparación)
       this.usuarios = this.usuarios.map((u) => {
-          // Si el password NO empieza con $2b (formato bcrypt) O es igual a la contraseña por defecto (1234)
           if (!u.password.startsWith('$2b') || u.password === this.defaultPassword) {
               console.warn(`[AuthService] Contraseña de ${u.email} re-hasheada forzosamente.`);
               u.password = bcrypt.hashSync(this.defaultPassword, this.saltRounds); 
@@ -39,7 +39,7 @@ export class AuthService {
       });
       
     } else {
-      // 🚀 CREACIÓN INICIAL (Solo si localStorage está vacío)
+      // CREACIÓN INICIAL
       const adminHash = bcrypt.hashSync(this.defaultPassword, this.saltRounds);
       const clienteHash = bcrypt.hashSync(this.defaultPassword, this.saltRounds);
 
@@ -52,27 +52,27 @@ export class AuthService {
     
     // Solo guardamos si hubo creación o corrección de hashes
     if (needsSaving) {
-        this.guardarUsuarios();
+        this.guardarUsuarios(); // Guarda en localStorage
     }
   }
 
+  // Guarda el array de usuarios (con hashes) en localStorage
   private guardarUsuarios(): void {
     localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
   }
 
   // 🔑 LOGIN (SÍNCRONO)
   login(email: string, password: string): boolean {
-    this.cargarUsuarios(); // Medida de seguridad: asegura que los datos estén frescos
+    this.cargarUsuarios(); 
     
     const usuario = this.usuarios.find(u => u.email === email);
     
     if (usuario) {
-      // Utilizamos compareSync para la verificación
       const passwordMatch = bcrypt.compareSync(password, usuario.password); 
       
       if (passwordMatch) {
-        localStorage.setItem('usuario', JSON.stringify(usuario));
-        // NOTA: La navegación se maneja en los componentes (LoginComponent y HomeComponent)
+        // 🚨 CAMBIO CLAVE: Almacenar la sesión activa en sessionStorage
+        sessionStorage.setItem('usuario', JSON.stringify(usuario)); 
         return true;
       }
     }
@@ -84,22 +84,23 @@ export class AuthService {
     const existe = this.usuarios.find(u => u.email === email);
     if (existe) return false;
 
-    // Genera el hash de la contraseña de forma síncrona
     const hashedPassword = bcrypt.hashSync(password, this.saltRounds);
     
     const nuevo: Usuario = { email, password: hashedPassword, rol: 'cliente' };
     this.usuarios.push(nuevo);
-    this.guardarUsuarios(); 
+    this.guardarUsuarios(); // Guarda el array actualizado en localStorage
     return true;
   }
   
+  // 🔑 LOGOUT: Eliminar la sesión de sessionStorage
   logout(): void {
-    localStorage.removeItem('usuario');
+    sessionStorage.removeItem('usuario');
     this.router.navigate(['/login']);
   }
 
+  // 🔑 getUsuario: Obtener el usuario de sessionStorage
   getUsuario(): Usuario | null {
-    const u = localStorage.getItem('usuario');
+    const u = sessionStorage.getItem('usuario');
     return u ? JSON.parse(u) : null;
   }
 
@@ -108,7 +109,8 @@ export class AuthService {
     return u ? u.rol : null;
   }
 
+  // 🔑 isLogged: Verificar en sessionStorage
   isLogged(): boolean {
-    return !!localStorage.getItem('usuario');
+    return !!sessionStorage.getItem('usuario');
   }
 }
