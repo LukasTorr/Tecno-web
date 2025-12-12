@@ -1,21 +1,30 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+// COMBINACIÓN: Mantener CatalogoSnacksComponent de CompraSnacks
 import { CatalogoSnacksComponent } from './Components/catalogo-snacks/catalogo-snacks.component';
 import { LoginComponent } from './Components/login/login.component';
 import { HomeComponent } from './Components/home/home.component';
 import { AdminComponent } from './Components/admin/admin.component';
-import { RegisterComponent } from './Components/register/register.component'; // 👈 agregado
+// Mantener RegisterComponent
+import { RegisterComponent } from './Components/register/register.component'; 
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+// Mantener ReservaComponent de master
+import { ReservaComponent } from './Components/reserva/reserva.component';
+
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent }, // 👈 nueva ruta de registro
+  // Mantener 'register'
+  { path: 'register', component: RegisterComponent }, 
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
-  { path: 'snacks', component: CatalogoSnacksComponent },
+  // RESOLUCIÓN DEL CONFLICTO: Incluir ambas rutas
+  { path: 'snacks', component: CatalogoSnacksComponent }, // Agregado de CompraSnacks
+  { path: 'reserva', component: ReservaComponent }, // Agregado de master
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' },
+ 
 ];
 
 @NgModule({
