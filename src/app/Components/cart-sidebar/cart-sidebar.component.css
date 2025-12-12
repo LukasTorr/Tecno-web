@@ -180,9 +180,10 @@
   margin: 0;
 }
 
-.qty-input[type=number] {
+/*.qty-input[type=number] {
   -moz-appearance: textfield;
 }
+*/
 
 /* === SUBTOTAL === */
 .item-subtotal {
