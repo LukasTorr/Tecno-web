@@ -64,11 +64,11 @@
 /* === CADA ITEM DEL CARRITO === */
 .cart-item {
   display: grid;
-  /* Increase the space for the name column so the full name is more likely to be visible */
-  grid-template-columns: 60px 2fr 90px 70px 32px;
-  grid-template-rows: auto;
+  /* Left column is media (image + controls stacked), then name, subtotal and remove button */
+  grid-template-columns: 70px 2fr 90px 32px;
+  grid-auto-rows: auto;
   gap: 12px;
-  align-items: center;
+  align-items: start;
   padding: 12px;
   margin-bottom: 10px;
   border: 1px solid #eee;
@@ -84,6 +84,14 @@
   border-radius: 4px;
   background-color: white;
   border: 1px solid #f0f0f0;
+}
+
+/* New media container: stacks image and quantity controls */
+.item-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
 /* === INFORMACIÓN DEL ITEM === */
@@ -121,10 +129,12 @@
 .item-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   border: 1px solid #ddd;
   border-radius: 4px;
   background-color: white;
-  padding: 2px;
+  padding: 4px;
+  width: 100%;
 }
 
 .qty-btn {
@@ -152,6 +162,16 @@
   outline: none;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+/* Make controls a bit compact on small widths */
+@media (max-width: 420px) {
+  .cart-item {
+    grid-template-columns: 60px 1fr 80px 32px;
+    gap: 8px;
+  }
+  .qty-input { width: 34px; }
+  .qty-btn { width: 24px; height: 24px; }
 }
 
 .qty-input::-webkit-outer-spin-button,
