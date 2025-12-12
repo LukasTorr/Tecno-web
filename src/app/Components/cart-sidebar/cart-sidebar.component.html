@@ -13,7 +13,7 @@
       <img [src]="item.image" alt="{{ item.name }}" class="item-image">
       
       <div class="item-info">
-        <h3 class="item-name">{{ item.name }}</h3>
+        <h3 class="item-name" title="{{ item.name }}">{{ item.name }}</h3>
         <p class="item-price">${{ item.price | number: '1.0-0' }}</p>
       </div>
       
