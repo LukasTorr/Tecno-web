@@ -1,22 +1,3 @@
-<header class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-  <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/home">{{ title }}</a>
-    <div class="d-flex align-items-center">
-      <ng-container *ngIf="auth.isLogged()">
-        <span class="navbar-text me-3 d-none d-sm-block">
-          Bienvenido, <strong>{{ auth.getUsuario()?.email }}</strong>
-        </span>
-        <button class="btn btn-outline-light" (click)="logout()">Cerrar sesión</button>
-      </ng-container>
-      
-      <ng-container *ngIf="!auth.isLogged()">
-        <button class="btn btn-warning" (click)="openLoginModal()">
-            <i class="bi bi-person-circle"></i> Iniciar Sesión
-        </button>
-      </ng-container>
-    </div>
-  </div>
-</header>
 <div class="container mt-5">
   
   <h2>Películas en cartelera</h2>
@@ -50,38 +31,4 @@
     </div>
   </div>
 
-</div>
-
-<div class="login-modal-overlay" *ngIf="showLoginModal">
-  <div class="login-modal">
-    <div class="card shadow p-4">
-      <button class="close-modal-btn" (click)="closeLoginModal()">&times;</button>
-      <h3 class="text-center mb-3">🎬 Iniciar Sesión</h3>
-
-      <div class="mb-3">
-        <label>Email</label>
-        <input type="email" class="form-control" [(ngModel)]="loginEmail" />
-      </div>
-
-      <div class="mb-3">
-        <label>Contraseña</label>
-        <input
-          type="password"
-          class="form-control"
-          [(ngModel)]="loginPassword"
-          (keyup.enter)="handleLoginFromModal()"
-        />
-      </div>
-
-      <button class="btn btn-warning w-100" (click)="handleLoginFromModal()">Ingresar</button>
-      
-      <div *ngIf="loginError" class="alert alert-danger mt-3">{{ loginError }}</div>
-
-      <p class="text-center mt-3">
-        ¿No tienes una cuenta?
-        <a routerLink="/register">Regístrate aquí</a>
-      </p>
-
-    </div>
-  </div>
 </div>

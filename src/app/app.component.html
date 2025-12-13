@@ -1,1 +1,32 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/home">🎬 {{ title }}</a>
+
+    <div class="d-flex align-items-center">
+      
+      <ng-container *ngIf="auth.isLogged()">
+        
+        <button 
+          class="btn btn-outline-light me-3" 
+          [routerLink]="auth.getUsuario()?.rol === 'Admin' ? '/admin' : '/user/profile'"
+          title="Ver perfil o Panel de Administración">
+          
+          <i class="bi bi-person-circle"></i> 
+          <span class="d-none d-sm-inline ms-2">
+             {{ auth.getUsuario()?.email }}
+          </span>
+        </button>
+
+        <button class="btn btn-warning" (click)="logout()">Cerrar sesión</button>
+      </ng-container>
+      
+      <ng-container *ngIf="!auth.isLogged()">
+        <button class="btn btn-warning" (click)="navigateToLogin()">
+            <i class="bi bi-person-circle"></i> Iniciar Sesión
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</header>
+
 <router-outlet></router-outlet>

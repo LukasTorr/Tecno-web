@@ -2,8 +2,9 @@
 
 import { Component, OnInit } from '@angular/core'; 
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router'; 
-// 🔑 CORRECCIÓN CLAVE: Asumiendo que movie.service.ts está en src/app/services/
+// 🔑 Importar Router y ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router'; 
+// 🔑 CORRECCIÓN: Ajustar la ruta de importación del servicio de películas
 import { Movie, MovieService } from '../../services/peliculas/movie.service'; 
 
 
@@ -13,97 +14,59 @@ import { Movie, MovieService } from '../../services/peliculas/movie.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  title = '🎬 Regal Cinemas';
-
-  // Variables de login
-  showLoginModal: boolean = false; // <-- Re-añado esta propiedad para que el modal funcione
-  loginEmail: string = '';
-  loginPassword: string = '';
+  
+  // 🔑 Propiedades necesarias para la lógica de login, aunque ya no se usen para el modal
+  showLoginModal: boolean = false; 
   loginError: string = '';
   
-  // Usar la interfaz Movie importada del servicio
   movies: Movie[] = []; 
   
-  // Inyectar MovieService
+
   constructor(
     public auth: AuthService, 
     private router: Router,
-    private movieService: MovieService // 👈 Inyectar MovieService
+    // 🔑 Inyectar ActivatedRoute para leer parámetros
+    private route: ActivatedRoute,
+    private movieService: MovieService,
   ) {}
 
   ngOnInit(): void {
     this.loadMovies();
+    this.checkIfModalShouldOpen(); // 🔑 Llamamos a la función que revisa la URL
   }
   
   loadMovies(): void {
-    // Obtener las películas del servicio y filtrar las activas
-    this.movies = this.movieService.getMoviesCatalog().filter(m => m.estado === 'Activa');
+    this.movies = this.movieService.getMoviesCatalog();
   }
   
-  // --- LÓGICA DEL MODAL Y LOGIN ---
-
-  openLoginModal(): void {
-    this.showLoginModal = true;
-    this.loginEmail = ''; 
-    this.loginPassword = '';
-    this.loginError = '';
+  // 🔑 NUEVO MÉTODO: Dispara el modal de login si la URL lo indica
+  checkIfModalShouldOpen(): void {
+    this.route.queryParams.subscribe(params => {
+      // 1. Si el parámetro 'openLogin' existe (vino del header)
+      if (params['openLogin'] === 'true') {
+        
+        // 2. Establecemos el estado local para que el Login Component sepa que fue llamado por el header
+        // Aunque la redirección se encarga de esto, mantenemos la limpieza de la URL:
+        
+        // 3. Limpiar el query parameter para que no se reabra al refrescar
+        this.router.navigate([], {
+          queryParams: { openLogin: null },
+          queryParamsHandling: 'merge' 
+        });
+        
+        // NOTA: Con la nueva estructura, el login se abre automáticamente al ir a /login.
+        // Solo necesitamos asegurar que el botón de reservar redirija correctamente.
+      }
+    });
   }
 
-  closeLoginModal(): void {
-    this.showLoginModal = false;
-  }
-  
-  // 🔑 CORRECCIÓN CLAVE: Validación de email robusta
-  private validarEmail(email: string): boolean {
-    // Permite nombres de usuario y dominios comunes que terminan en .com
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/i;
-    return emailRegex.test(email);
-  }
-
-  // SÍNCRONO: Lógica del Login desde el Modal
-  handleLoginFromModal() {
-    this.loginError = '';
-
-    // 1. VALIDACIÓN
-    if (!this.validarEmail(this.loginEmail)) {
-        this.loginError = 'Por favor, introduce un correo electrónico válido que termine en .com';
-        return;
-    }
-    
-    if (!this.loginPassword) {
-        this.loginError = 'La contraseña no puede estar vacía.';
-        return;
-    }
-
-    // 2. Llamada SÍNCRONA al servicio
-    const success = this.auth.login(this.loginEmail, this.loginPassword); 
-
-    if (success) {
-      this.closeLoginModal();
-      this.loadMovies(); // <--- ACTUALIZA LA LISTA DE PELÍCULAS
-      
-      // 3. REDIRECCIÓN POST-LOGIN
-      const user = this.auth.getUsuario();
-
-      if (user?.rol === 'admin') {
-        this.router.navigate(['/admin']);
-      } 
-      // Si es cliente, la barra de navegación se actualiza y permanece en Home
-      
-    } else {
-      this.loginError = 'Usuario o contraseña incorrectos';
-    }
-  }
-  
-  // --- LÓGICA DE NAVEGACIÓN ---
-  
+  // Se mantiene solo la redirección a /login
   onReservar(movieTitle: string, sala: string, hora: string) {
     if (this.auth.isLogged()) {
-      // Si está logueado, navega a la página de reserva
       this.router.navigate(['/reserva'], { queryParams: { movie: movieTitle, sala: sala, hora: hora } });
     } else {
-      // Si NO está logueado, muestra el modal de login
-      this.openLoginModal();
+      // 🔑 Redirigir a /login
+      this.router.navigate(['/login']);
     }
   }
 
