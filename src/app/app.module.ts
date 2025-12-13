@@ -12,7 +12,8 @@ import { RegisterComponent } from './Components/register/register.component';
 // RESOLUCIÓN DEL CONFLICTO: Incluir los componentes de ambas ramas
 import { ReservaComponent } from './Components/reserva/reserva.component'; // De master
 import { CatalogoSnacksComponent } from './Components/catalogo-snacks/catalogo-snacks.component'; // De CompraSnacks
-import { CartSidebarComponent } from './Components/cart-sidebar/cart-sidebar.component'; // De CompraSnacks
+import { CartSidebarComponent } from './Components/cart-sidebar/cart-sidebar.component';
+import { CompraCarrosComponent } from './Components/Components/compra-carros/compra-carros.component';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { CartSidebarComponent } from './Components/cart-sidebar/cart-sidebar.com
     // RESOLUCIÓN DEL CONFLICTO: Declarar todos los componentes
     ReservaComponent, // De master
     CatalogoSnacksComponent, // De CompraSnacks
-    CartSidebarComponent // De CompraSnacks
+    CartSidebarComponent, CompraCarrosComponent // De CompraSnacks
   ],
   imports: [
     BrowserModule,
