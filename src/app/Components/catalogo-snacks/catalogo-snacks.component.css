@@ -93,17 +93,13 @@
 .cart-button:hover {
   background-color: #1d4ed8;
 }
-.page-title-wrapper {
-  width: 100%;
-  background: #24242c;
-  padding: 12px 0; /* vertical padding for the banner */
-}
+
 
 .page-title {
   font-size: 2rem;
   font-weight: bold;
   margin: 0;
-  color: #ffffff;
+  color: #28242c;
   display: block;
   width: fit-content;
   margin-left: auto;
