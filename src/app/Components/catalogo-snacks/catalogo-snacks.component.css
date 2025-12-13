@@ -93,13 +93,22 @@
 .cart-button:hover {
   background-color: #1d4ed8;
 }
+.page-title-wrapper {
+  width: 100%;
+  background: #24242c;
+  padding: 12px 0; /* vertical padding for the banner */
+}
+
 .page-title {
-  text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  color: #1e3a8a; /* Azul bonito */
+  margin: 0;
+  color: #ffffff;
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 12px;
 }
 
 /* === SIDEBAR DEL CARRITO === */
