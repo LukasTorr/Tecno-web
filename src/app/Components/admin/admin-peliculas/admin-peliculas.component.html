@@ -75,9 +75,17 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">URL de Carátula (Ruta relativa)</label>
-                    <input type="text" class="form-control" [(ngModel)]="currentMovie.image">
-                    <small class="form-text text-muted">Ej: assets/image/nombre.jpg. Esta imagen aparecerá en el Home.</small>
+                    <label class="form-label d-block">URL de Carátula (Ruta relativa)</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" [(ngModel)]="currentMovie.image" placeholder="assets/image/nombre.jpg">
+                        
+                        <button class="btn btn-info" type="button" (click)="openFileModal()">
+                            Seleccionar Archivo
+                        </button>
+                    </div>
+                    <small class="form-text text-muted">Ruta actual: {{ currentMovie.image }}</small>
+                    
+                    <img *ngIf="currentMovie.image" [src]="currentMovie.image" alt="Preview" style="max-width: 100px; max-height: 150px; margin-top: 10px; border: 1px solid #ddd;">
                 </div>
                 <hr>
                 <h6>Gestión de Sesiones (Salas y Horarios)</h6>
@@ -91,7 +99,7 @@
                 <div class="input-group mb-3">
                     <select class="form-select" [(ngModel)]="newSessionSala">
                         <option value="" disabled>Selecciona Sala</option>
-                        <option *ngFor="let sala of availableSalas" [value]="sala">{{ sala }}</option>
+                        <option *ngFor="let sala of availableSalas" [value]="sala.nombre">{{ sala.nombre }} ({{ sala.formato }})</option>
                     </select>
                     <input type="text" class="form-control" placeholder="Hora (ej: 19:00)" [(ngModel)]="newSessionHora">
                     <button class="btn btn-secondary" type="button" (click)="addSession()">+ Agregar Sesión</button>
@@ -101,6 +109,32 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="showModal = false">Cerrar</button>
                 <button type="button" class="btn btn-primary" (click)="saveMovie()">Guardar Película</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal d-block" *ngIf="showFileModal" style="background-color: rgba(0,0,0,0.7); z-index: 1060;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Seleccionar Carátula</h5>
+                <button type="button" class="btn-close btn-close-white" (click)="showFileModal = false"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small">Haz clic en el nombre del archivo. Asume la ruta: <code>assets/image/</code></p>
+                
+                <ul class="list-group">
+                    <li 
+                      *ngFor="let fileName of availableFileNames" 
+                      class="list-group-item list-group-item-action"
+                      (click)="selectFileName(fileName)">
+                      {{ fileName }}
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showFileModal = false">Cerrar</button>
             </div>
         </div>
     </div>
