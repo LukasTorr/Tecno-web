@@ -13,7 +13,7 @@ import { RegisterComponent } from './Components/register/register.component';
 import { ReservaComponent } from './Components/reserva/reserva.component'; // De master
 import { CatalogoSnacksComponent } from './Components/catalogo-snacks/catalogo-snacks.component'; // De CompraSnacks
 import { CartSidebarComponent } from './Components/cart-sidebar/cart-sidebar.component';
-import { CompraCarrosComponent } from './Components/Components/compra-carros/compra-carros.component';
+import { CompraCarrosComponent } from './Components/compra-carros/compra-carros.component';
 
 
 @NgModule({
