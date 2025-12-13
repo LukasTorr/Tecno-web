@@ -1,0 +1,15 @@
+<div class="container-fluid d-flex p-0">
+  <app-sidebar (sidebarToggle)="onSidebarToggle($event)"></app-sidebar>
+
+  <div
+    class="content-area flex-grow-1 p-4 transition-all"
+    [class.expanded]="!isSidebarCollapsed"
+    [class.collapsed]="isSidebarCollapsed"
+  >
+    <app-perfil-card *ngIf="usuario" [usuario]="usuario"></app-perfil-card>
+
+    <hr />
+
+    <app-perfil-tabs [usuario]="usuario"></app-perfil-tabs>
+  </div>
+</div>

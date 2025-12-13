@@ -1,0 +1,39 @@
+<div *ngIf="usuario; else noUsuario" class="container mt-4">
+  <div
+    class="bg-light p-4 rounded-4 shadow-sm mx-auto"
+    style="max-width: 600px"
+  >
+    <h3 class="text-center mb-4">Mis Reservas</h3>
+
+    <div *ngIf="reservas.length > 0; else sinReservas">
+      <div
+        class="card mb-3 border-0 shadow-sm reserva-card"
+        *ngFor="let reserva of reservas"
+      >
+        <div class="card-body">
+          <h4 class="card-title mb-2">{{ reserva.pelicula }}</h4>
+
+          <p class="card-text mb-1">
+            <strong>Fecha:</strong> {{ reserva.fecha }}
+          </p>
+
+          <p class="card-text mb-1">
+            <strong>Hora:</strong> {{ reserva.hora }}
+          </p>
+
+          <p class="card-text mb-0">
+            <strong>Asientos:</strong> {{ reserva.asientos.join(", ") }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #sinReservas>
+      <p class="text-center text-muted">No tienes reservas registradas.</p>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #noUsuario>
+  <p class="text-center mt-4">Por favor inicia sesión para ver tus reservas.</p>
+</ng-template>

@@ -1,0 +1,35 @@
+.content-area {
+  transition: all 0.3s ease;
+  margin-left: 240px;
+}
+
+.content-area.collapsed {
+  margin-left: 70px;
+}
+
+@media (max-width: 768px) {
+  .content-area {
+    margin-left: 0 !important;
+  }
+
+  .content-area.collapsed {
+    margin-left: 0 !important;
+  }
+}
+
+.reserva-card {
+  width: 20rem;
+  margin: 20px auto;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reserva-card:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}

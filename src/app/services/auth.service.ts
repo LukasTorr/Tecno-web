@@ -1,8 +1,8 @@
+// auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as bcrypt from 'bcryptjs'; 
 import { UserService, User } from './user/user.service'; 
-
 
 // 🔑 Interfaz para la data de la sesión (solo email y rol)
 export interface SessionUsuario { 
@@ -13,6 +13,7 @@ export interface SessionUsuario {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     
+    // Asumimos que UserService está en './user/user.service'
     constructor(private router: Router, private userService: UserService) { } 
 
     // 🔑 LOGIN (SÍNCRONO)
