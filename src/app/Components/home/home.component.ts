@@ -1,23 +1,10 @@
 // src/app/Components/home/home.component.ts
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router'; 
-
-// NUEVO: Definición de la interfaz para una Sesión (Sala + Hora)
-interface Session {
-  sala: string;
-  hora: string;
-}
-
-// NUEVO: Definición de la interfaz para una Película
-interface Movie {
-  title: string;
-  genre: string;
-  duration: number;
-  image: string;
-  sessions: Session[]; // Lista de sesiones disponibles
-}
+// 🔑 CORRECCIÓN CLAVE: Asumiendo que movie.service.ts está en src/app/services/
+import { Movie, MovieService } from '../../services/peliculas/movie.service'; 
 
 
 @Component({
@@ -25,95 +12,54 @@ interface Movie {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   title = '🎬 Regal Cinemas';
 
-  // NUEVO: Variables para el modal de Login
-  showLoginModal: boolean = false;
-  loginEmail = '';
-  loginPassword = '';
-  loginError = '';
+  // Variables de login
+  showLoginModal: boolean = false; // <-- Re-añado esta propiedad para que el modal funcione
+  loginEmail: string = '';
+  loginPassword: string = '';
+  loginError: string = '';
   
-  // DATOS MOCK DE PELÍCULAS CON SESIONES
-  movies: Movie[] = [
-    { 
-        title: 'Dune: Parte II', 
-        genre: 'Ciencia ficción', 
-        duration: 166, 
-        image: 'assets/image/dune2.jpg',
-        sessions: [
-            { sala: 'Sala 1 - IMAX', hora: '19:00' },
-            { sala: 'Sala 3 - Estándar', hora: '15:30' },
-            { sala: 'Sala 3 - Estándar', hora: '22:00' },
-        ]
-    },
-    { 
-        title: 'Inside Out 2', 
-        genre: 'Animación', 
-        duration: 95, 
-        image: 'assets/image/insideout2.jpg',
-        sessions: [
-            { sala: 'Sala 2 - VIP', hora: '16:30' },
-            { sala: 'Sala 2 - VIP', hora: '18:45' },
-        ]
-    },
-    { 
-        title: 'Joker 2', 
-        genre: 'Drama', 
-        duration: 138, 
-        image: 'assets/image/joker2.jpg',
-        sessions: [
-            { sala: 'Sala 1 - IMAX', hora: '21:30' },
-            { sala: 'Sala 3 - Estándar', hora: '17:00' },
-        ]
-    }
-    // Puedes añadir más películas aquí
-  ];
+  // Usar la interfaz Movie importada del servicio
+  movies: Movie[] = []; 
+  
+  // Inyectar MovieService
+  constructor(
+    public auth: AuthService, 
+    private router: Router,
+    private movieService: MovieService // 👈 Inyectar MovieService
+  ) {}
 
-
-  // Inyectar Router en el constructor
-  constructor(public auth: AuthService, private router: Router) {}
-
-  // MODIFICADO: Ahora recibe la sala y hora para enviarlas a la reserva
-  onReservar(movieTitle: string, sala: string, hora: string) {
-    if (this.auth.isLogged()) {
-      // Si está logueado, navega a la página de reserva
-      this.router.navigate(['/reserva'], { 
-        queryParams: { 
-            movie: movieTitle, 
-            sala: sala,   
-            hora: hora    
-        } 
-      });
-    } else {
-      // Si NO está logueado, muestra el modal de login
-      this.openLoginModal();
-    }
+  ngOnInit(): void {
+    this.loadMovies();
   }
-
-  logout() {
-    this.auth.logout();
-    this.router.navigate(['/home']); 
+  
+  loadMovies(): void {
+    // Obtener las películas del servicio y filtrar las activas
+    this.movies = this.movieService.getMoviesCatalog().filter(m => m.estado === 'Activa');
   }
+  
+  // --- LÓGICA DEL MODAL Y LOGIN ---
 
-  openLoginModal() {
+  openLoginModal(): void {
     this.showLoginModal = true;
     this.loginEmail = ''; 
     this.loginPassword = '';
     this.loginError = '';
   }
 
-  closeLoginModal() {
+  closeLoginModal(): void {
     this.showLoginModal = false;
   }
-
+  
   // 🔑 CORRECCIÓN CLAVE: Validación de email robusta
   private validarEmail(email: string): boolean {
-    // Permite nombres de usuario complejos y dominios que terminan en .com
+    // Permite nombres de usuario y dominios comunes que terminan en .com
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/i;
     return emailRegex.test(email);
   }
-  
+
   // SÍNCRONO: Lógica del Login desde el Modal
   handleLoginFromModal() {
     this.loginError = '';
@@ -129,22 +75,40 @@ export class HomeComponent {
         return;
     }
 
-    // 2. Llamada SÍNCRONA
+    // 2. Llamada SÍNCRONA al servicio
     const success = this.auth.login(this.loginEmail, this.loginPassword); 
 
     if (success) {
       this.closeLoginModal();
+      this.loadMovies(); // <--- ACTUALIZA LA LISTA DE PELÍCULAS
       
-      // 3. REDIRECCIÓN POST-LOGIN DEL MODAL
+      // 3. REDIRECCIÓN POST-LOGIN
       const user = this.auth.getUsuario();
 
       if (user?.rol === 'admin') {
         this.router.navigate(['/admin']);
       } 
-      // Si es cliente, cerramos el modal y la vista se refresca.
+      // Si es cliente, la barra de navegación se actualiza y permanece en Home
       
     } else {
       this.loginError = 'Usuario o contraseña incorrectos';
     }
+  }
+  
+  // --- LÓGICA DE NAVEGACIÓN ---
+  
+  onReservar(movieTitle: string, sala: string, hora: string) {
+    if (this.auth.isLogged()) {
+      // Si está logueado, navega a la página de reserva
+      this.router.navigate(['/reserva'], { queryParams: { movie: movieTitle, sala: sala, hora: hora } });
+    } else {
+      // Si NO está logueado, muestra el modal de login
+      this.openLoginModal();
+    }
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/home']); 
   }
 }
