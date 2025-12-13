@@ -1,88 +1,77 @@
-// home.component.ts
-import { Component } from '@angular/core';
+// src/app/Components/home/home.component.ts
+
+import { Component, OnInit } from '@angular/core'; 
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router'; // 👈 ¡IMPORTANTE: Añade esta importación!
+// 🔑 Importar Router y ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router'; 
+// 🔑 CORRECCIÓN: Ajustar la ruta de importación del servicio de películas
+import { Movie, MovieService } from '../../services/peliculas/movie.service'; 
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  title = '🎬 Regal Cinemas';
+export class HomeComponent implements OnInit {
+  
+  // 🔑 Propiedades necesarias para la lógica de login, aunque ya no se usen para el modal
+  showLoginModal: boolean = false; 
+  loginError: string = '';
+  
+  movies: Movie[] = []; 
+  
 
-  movies = [
-    { title: 'Dune: Parte II', genre: 'Ciencia ficción', duration: 166, image: 'assets/image/dune2.jpg' },
-    { title: 'Inside Out 2', genre: 'Animación', duration: 95, image: 'assets/image/insideout2.jpg' },
-    { title: 'Joker 2', genre: 'Drama', duration: 138, image: 'assets/image/joker2.jpg' }
-  ];
+  constructor(
+    public auth: AuthService, 
+    private router: Router,
+    // 🔑 Inyectar ActivatedRoute para leer parámetros
+    private route: ActivatedRoute,
+    private movieService: MovieService,
+  ) {}
 
-  // NUEVO: Variables para el modal de Login
-  showLoginModal: boolean = false;
-  loginEmail = '';
-  loginPassword = '';
-  loginError = '';
+  ngOnInit(): void {
+    this.loadMovies();
+    this.checkIfModalShouldOpen(); // 🔑 Llamamos a la función que revisa la URL
+  }
+  
+  loadMovies(): void {
+    this.movies = this.movieService.getMoviesCatalog();
+  }
+  
+  // 🔑 NUEVO MÉTODO: Dispara el modal de login si la URL lo indica
+  checkIfModalShouldOpen(): void {
+    this.route.queryParams.subscribe(params => {
+      // 1. Si el parámetro 'openLogin' existe (vino del header)
+      if (params['openLogin'] === 'true') {
+        
+        // 2. Establecemos el estado local para que el Login Component sepa que fue llamado por el header
+        // Aunque la redirección se encarga de esto, mantenemos la limpieza de la URL:
+        
+        // 3. Limpiar el query parameter para que no se reabra al refrescar
+        this.router.navigate([], {
+          queryParams: { openLogin: null },
+          queryParamsHandling: 'merge' 
+        });
+        
+        // NOTA: Con la nueva estructura, el login se abre automáticamente al ir a /login.
+        // Solo necesitamos asegurar que el botón de reservar redirija correctamente.
+      }
+    });
+  }
 
-  // Inyectar Router en el constructor
-  constructor(public auth: AuthService, private router: Router) {}
-
-  // NUEVO: Lógica del botón Reservar
-  onReservar(movieTitle: string) {
+  // Se mantiene solo la redirección a /login
+  onReservar(movieTitle: string, sala: string, hora: string) {
     if (this.auth.isLogged()) {
-      // Si está logueado, navega a la página de reserva
-      this.router.navigate(['/reserva'], { queryParams: { movie: movieTitle } });
+      this.router.navigate(['/reserva'], { queryParams: { movie: movieTitle, sala: sala, hora: hora } });
     } else {
-      // Si NO está logueado, muestra el modal de login
-      this.openLoginModal();
+      // 🔑 Redirigir a /login
+      this.router.navigate(['/login']);
     }
   }
 
-  // Lógica de cerrar sesión (actualizada para navegar al home)
   logout() {
     this.auth.logout();
     this.router.navigate(['/home']); 
-  }
-
-  // Lógica del Modal
-  openLoginModal() {
-    this.showLoginModal = true;
-    this.loginEmail = ''; 
-    this.loginPassword = '';
-    this.loginError = '';
-  }
-
-  closeLoginModal() {
-    this.showLoginModal = false;
-  }
-
-  private validarEmail(email: string): boolean {
-    // Reutilizar la validación de .com
-    const emailRegex = /^[^\s@]+@[^\s@]+\.com$/i;
-    return emailRegex.test(email);
-  }
-  
-  // NUEVO: Lógica de Login dentro del Modal
-  async handleLoginFromModal() {
-    this.loginError = '';
-
-    if (!this.validarEmail(this.loginEmail)) {
-        this.loginError = 'Por favor, introduce un correo electrónico válido que termine en .com';
-        return;
-    }
-    
-    if (!this.loginPassword) {
-        this.loginError = 'La contraseña no puede estar vacía.';
-        return;
-    }
-
-    // El login ahora es asíncrono gracias a los cambios anteriores con bcrypt
-    const success = await this.auth.login(this.loginEmail, this.loginPassword);
-
-    if (success) {
-      this.closeLoginModal(); // Cierra el modal al iniciar sesión
-      // El AuthService se encarga de navegar a /home
-    } else {
-      this.loginError = 'Usuario o contraseña incorrectos';
-    }
   }
 }

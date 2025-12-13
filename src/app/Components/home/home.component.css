@@ -1,3 +1,5 @@
+/* src/app/Components/home/home.component.css */
+
 h2 {
   font-weight: bold;
   color: #dc3545;
@@ -15,20 +17,64 @@ h2 {
 .btn-warning {
   font-weight: 600;
 }
+
+/* === ESTILOS PARA SIMULAR CARRUSEL === */
+.movies-carousel-container {
+    overflow-x: auto; /* Habilita el scroll horizontal */
+    overflow-y: hidden; 
+    white-space: nowrap; /* Evita que los elementos internos salten de línea */
+    padding-bottom: 20px; /* Espacio para la barra de scroll */
+    margin-bottom: 20px;
+}
+
+.movies-carousel-track {
+    display: inline-flex; /* Permite que los elementos fluyan horizontalmente */
+    padding: 0 10px;
+}
+
+.movie-card-wrapper {
+    flex: 0 0 280px; /* Tamaño fijo para cada tarjeta de película */
+    margin-right: 25px; /* Espacio entre tarjetas */
+    display: inline-block; /* Alternativa a flex para asegurar el ancho */
+    white-space: normal;
+}
+
+.movie-poster {
+    height: 350px; /* Altura fija para el póster */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio */
+}
+
+/* Estilo para los botones de sesión/horario */
+.session-btn {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    font-weight: bold;
+    /* Ajustes para color más visible */
+    border: 2px solid #ffc107; 
+    color: #212529; /* Texto negro */
+    background-color: white;
+}
+
+.session-btn:hover {
+    background-color: #ffc107;
+    color: #212529;
+    transform: scale(1.05);
+}
+
+/* ... (El resto de los estilos del modal de login se mantiene igual) ... */
 .login-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.75); /* Oscuro semi-transparente */
+    background-color: rgba(0, 0, 0, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1050; /* Asegura que esté por encima de todo */
+    z-index: 1050;
 }
 
-/* Contenedor central del formulario */
 .login-modal {
     background: white;
     padding: 20px;
@@ -36,30 +82,16 @@ h2 {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     position: relative;
     width: 90%;
-    max-width: 400px; /* Tamaño típico de un formulario de login */
+    max-width: 400px;
 }
 
-/* Botón de cerrar (la X) */
 .close-modal-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #333;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-}
-
-.close-modal-btn:hover {
-    opacity: 1;
-}
-
-/* Asegura que el contenido del modal no tenga bordes extra */
-.login-modal .card {
-    border: none;
-    box-shadow: none;
-    padding: 0 !important;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
 }

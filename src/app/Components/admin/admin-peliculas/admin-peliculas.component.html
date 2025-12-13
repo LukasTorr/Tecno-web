@@ -1,0 +1,141 @@
+<div class="mt-4">
+    <h3>Gestión de Catálogo de Películas</h3>
+    <p class="text-muted">Añade, edita o retira películas de cartelera. (Los cambios se reflejan en Home)</p>
+
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" (click)="openCreateModal()">➕ Agregar Nueva Película</button>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>ID (Ref)</th> 
+                <th>Título</th>
+                <th>Categoría</th>
+                <th>Sesiones (Sala/Hora)</th>
+                <th>Duración (min)</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let peli of peliculas">
+                <td>{{ peli.id.toString().slice(-4) }}</td>
+                <td>{{ peli.title }}</td>
+                <td>{{ peli.genre }}</td>
+                <td>
+                    <span *ngFor="let session of peli.sessions" class="badge bg-secondary me-1" title="Sala: {{ session.sala }}">
+                        {{ session.hora }}
+                    </span>
+                    <span *ngIf="peli.sessions.length === 0" class="text-danger">Sin Sesiones</span>
+                </td>
+                <td>{{ peli.duration }}</td>
+                <td>{{ peli.estado }}</td>
+                <td>
+                    <button class="btn btn-sm btn-info me-2" (click)="openEditModal(peli)">Editar</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteMovie(peli.id)">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal d-block" *ngIf="showModal" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" *ngIf="currentMovie">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ currentMovie.id > 0 ? 'Editar Película' : 'Crear Nueva Película' }}</h5>
+                <button type="button" class="btn-close" (click)="showModal = false"></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" [(ngModel)]="currentMovie.title">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Categoría (Género)</label>
+                        <input type="text" class="form-control" [(ngModel)]="currentMovie.genre">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Duración (min)</label>
+                        <input type="number" class="form-control" [(ngModel)]="currentMovie.duration">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Estado</label>
+                        <select class="form-control" [(ngModel)]="currentMovie.estado">
+                            <option value="Activa">Activa</option>
+                            <option value="Próximamente">Próximamente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label d-block">URL de Carátula (Ruta relativa)</label>
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" [(ngModel)]="currentMovie.image" placeholder="assets/image/nombre.jpg">
+                        
+                        <button class="btn btn-info" type="button" (click)="openFileModal()">
+                            Seleccionar Archivo
+                        </button>
+                    </div>
+                    <small class="form-text text-muted">Ruta actual: {{ currentMovie.image }}</small>
+                    
+                    <img *ngIf="currentMovie.image" [src]="currentMovie.image" alt="Preview" style="max-width: 100px; max-height: 150px; margin-top: 10px; border: 1px solid #ddd;">
+                </div>
+                <hr>
+                <h6>Gestión de Sesiones (Salas y Horarios)</h6>
+                <ul class="list-group mb-3">
+                    <li *ngFor="let session of currentMovie.sessions; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ session.hora }} en {{ session.sala }}
+                        <button class="btn btn-sm btn-danger" (click)="removeSession(i)">Eliminar</button>
+                    </li>
+                </ul>
+
+                <div class="input-group mb-3">
+                    <select class="form-select" [(ngModel)]="newSessionSala">
+                        <option value="" disabled>Selecciona Sala</option>
+                        <option *ngFor="let sala of availableSalas" [value]="sala.nombre">{{ sala.nombre }} ({{ sala.formato }})</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Hora (ej: 19:00)" [(ngModel)]="newSessionHora">
+                    <button class="btn btn-secondary" type="button" (click)="addSession()">+ Agregar Sesión</button>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showModal = false">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="saveMovie()">Guardar Película</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal d-block" *ngIf="showFileModal" style="background-color: rgba(0,0,0,0.7); z-index: 1060;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Seleccionar Carátula</h5>
+                <button type="button" class="btn-close btn-close-white" (click)="showFileModal = false"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small">Haz clic en el nombre del archivo. Asume la ruta: <code>assets/image/</code></p>
+                
+                <ul class="list-group">
+                    <li 
+                      *ngFor="let fileName of availableFileNames" 
+                      class="list-group-item list-group-item-action"
+                      (click)="selectFileName(fileName)">
+                      {{ fileName }}
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showFileModal = false">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
