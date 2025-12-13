@@ -1,3 +1,39 @@
+/* src/app/Components/login/login.component.css */
+
 .card {
   border-radius: 15px;
+}
+
+/* 🔑 ESTILOS CLAVE: Simulan el fondo transparente y centran el modal */
+.login-modal-overlay {
+    /* ❌ Quitamos el fixed total porque ahora es un componente de ruta */
+    /* Lo esencial es centrar el contenido y darle el ancho máximo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Añadir un padding superior e inferior para evitar que el modal toque los bordes */
+    padding: 50px 20px; 
+    min-height: calc(100vh - 50px); /* Asegura que ocupe casi todo el alto de la vista */
+}
+
+.login-modal {
+    background: white;
+    padding: 0; /* Ya tenemos padding en la card */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+  z-index: 10;
 }

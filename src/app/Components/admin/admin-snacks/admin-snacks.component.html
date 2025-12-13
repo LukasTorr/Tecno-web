@@ -1,0 +1,32 @@
+<div class="mt-4">
+    <h3>Gestión de Catálogo de Snacks</h3>
+    <p class="text-muted">Administra los productos de confitería, precios y stock.</p>
+
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success">➕ Agregar Nuevo Snack</button>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let snack of snacks">
+                <td>{{ snack.id }}</td>
+                <td>{{ snack.nombre }}</td>
+                <td>${{ snack.precio | number: '1.0-0' }}</td>
+                <td>{{ snack.stock }}</td>
+                <td>
+                    <button class="btn btn-sm btn-info me-2">Editar</button>
+                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

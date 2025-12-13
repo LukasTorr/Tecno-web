@@ -1,0 +1,17 @@
+#sidebar-wrapper {
+    min-height: 100vh;
+    width: 250px;
+}
+#page-content-wrapper {
+    width: 100%;
+}
+.sidebar-heading {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.list-group-item-action:hover {
+    background-color: #343a40 !important;
+}
+.list-group-item-action.active {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+}

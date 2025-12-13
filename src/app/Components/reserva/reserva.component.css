@@ -1,0 +1,62 @@
+.sala {
+  display: inline-block;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.fila {
+  display: flex;
+  justify-content: center;
+}
+
+.asiento {
+  width: 30px;
+  height: 30px;
+  margin: 4px;
+  border-radius: 5px;
+  background-color: #d3d3d3;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.asiento:hover {
+  transform: scale(1.1);
+}
+
+.asiento.ocupado {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.asiento.seleccionado {
+  background-color: #28a745;
+}
+
+.pantalla {
+  background: linear-gradient(to right, #999, #ccc);
+  border-radius: 5px;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
+  width: 80%;
+  margin: auto;
+  padding: 8px 0;
+}
+.botones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;        
+  margin-top: 20px;
+}
+
+.botones .btn {
+  min-width: 160px;  
+  font-weight: 600;
+}
+
+/* 👇 NUEVO ESTILO: Para el botón de volver */
+.btn-sm {
+  min-width: unset !important;
+}

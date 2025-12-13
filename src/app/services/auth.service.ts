@@ -1,93 +1,83 @@
+// auth.service.ts
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Usuario } from '../models/usuario.model';
+import * as bcrypt from 'bcryptjs'; 
+import { UserService, User } from './user/user.service'; 
+
+// 🔑 Interfaz para la data de la sesión (solo email y rol)
+export interface SessionUsuario { 
+    email: string;
+    rol: 'Admin' | 'Cliente'; 
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private usuarios: Usuario[] = [];
+    
+    // Asumimos que UserService está en './user/user.service'
+    constructor(private router: Router, private userService: UserService) { } 
 
-  constructor(private router: Router) {
-    this.cargarUsuarios();
-  }
+    // 🔑 LOGIN (SÍNCRONO)
+    login(email: string, password: string): boolean {
+        
+        const usuarios = this.userService.getUsersListWithPasswords();
+        const usuario = usuarios.find(u => u.email === email);
+        
+        if (usuario && usuario.password) {
+            
+            const passwordMatch = bcrypt.compareSync(password, usuario.password); 
 
-  private cargarUsuarios(): void {
-    const data = localStorage.getItem('usuarios');
-
-    if (data) {
-      this.usuarios = JSON.parse(data);
-    } else {
-      this.usuarios = [
-        { id: 1, email: 'admin@cine.com', password: '1234', rol: 'admin' },
-        { id: 2, email: 'cliente@cine.com', password: '1234', rol: 'cliente' },
-      ];
-      this.guardarUsuarios();
+            if (passwordMatch) {
+                // 1. Crear el objeto de sesión con el rol exacto: 'Admin' o 'Cliente'
+                const sessionData: SessionUsuario = { 
+                    email: usuario.email, 
+                    rol: usuario.rol as 'Admin' | 'Cliente' 
+                };
+                
+                // 2. Guardar en sessionStorage
+                sessionStorage.setItem('usuario', JSON.stringify(sessionData)); 
+                return true;
+            }
+        }
+        return false;
     }
-  }
 
-  private guardarUsuarios(): void {
-    localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
-  }
+    // ✍️ REGISTRO (SÍNCRONO)
+    register(email: string, password: string): boolean { 
+        
+        const existe = this.userService.getUsersListWithPasswords().find(u => u.email === email);
+        if (existe) return false;
 
-  login(email: string, password: string): boolean {
-    const usuario = this.usuarios.find(
-      (u) => u.email === email && u.password === password
-    );
-    if (usuario) {
-      localStorage.setItem('usuario', JSON.stringify(usuario));
-      this.router.navigate(['/home']);
-      return true;
+        const nuevo: User = { 
+            id: 0, 
+            email: email, 
+            password: password, 
+            rol: 'Cliente',
+            fechaRegistro: ''
+        };
+        
+        this.userService.saveUser(nuevo); 
+        return true;
     }
-    return false;
-  }
-
-  register(email: string, password: string): boolean {
-    const existe = this.usuarios.find((u) => u.email === email);
-    if (existe) return false;
-
-    const nuevoId =
-      this.usuarios.length > 0
-        ? Math.max(...this.usuarios.map((u) => u.id)) + 1
-        : 1;
-
-    const nuevo: Usuario = { id: nuevoId, email, password, rol: 'cliente' };
-    this.usuarios.push(nuevo);
-    this.guardarUsuarios();
-    return true;
-  }
-
-  actualizarUsuario(usuarioActualizado: Usuario) {
-    localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
-
-    // Actualizar también la lista completa de usuarios
-    const index = this.usuarios.findIndex(
-      (u) => u.id === usuarioActualizado.id
-    );
-    if (index !== -1) {
-      this.usuarios[index] = usuarioActualizado;
-      this.guardarUsuarios();
+    
+    // 🔑 LOGOUT
+    logout(): void {
+        sessionStorage.removeItem('usuario');
+        this.router.navigate(['/home']); 
     }
-  }
 
-  logout(): void {
-    localStorage.removeItem('usuario');
-    this.router.navigate(['/login']);
-  }
+    // 🔑 getUsuario: Obtener el usuario de sessionStorage (retorna SessionUsuario)
+    getUsuario(): SessionUsuario | null { 
+        const u = sessionStorage.getItem('usuario');
+        return u ? JSON.parse(u) : null;
+    }
 
-  getUsuario(): Usuario | null {
-    const u = localStorage.getItem('usuario');
-    return u ? JSON.parse(u) : null;
-  }
+    getRol(): string | null {
+        const u = this.getUsuario();
+        return u ? u.rol : null;
+    }
 
-  getUsuarios(): Usuario[] {
-    return this.usuarios;
-  }
-
-  getRol(): string | null {
-    const u = this.getUsuario();
-    return u ? u.rol : null;
-  }
-
-  isLogged(): boolean {
-    return !!localStorage.getItem('usuario');
-  }
+    // 🔑 isLogged: Verificar en sessionStorage
+    isLogged(): boolean {
+        return !!sessionStorage.getItem('usuario');
+    }
 }
