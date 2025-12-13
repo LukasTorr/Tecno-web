@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CartService } from '../../services/CarritoCompra/cart.service';
 
 @Component({
@@ -25,6 +25,65 @@ export class CatalogoSnacksComponent {
   showCart = false;
 
   constructor(private cart: CartService) {}
+
+  @ViewChildren('snackImg') snackImgs!: QueryList<ElementRef<HTMLImageElement>>;
+
+  ngAfterViewInit(): void {
+    // Wait a tick for images to be available
+    setTimeout(() => {
+      // Prefer an image that looks like popcorn (snack name contains 'popcorn' or 'PopCorn')
+      let target: HTMLImageElement | null = null;
+      this.snackImgs.forEach(el => {
+        const img = el.nativeElement as HTMLImageElement;
+        const alt = (img.alt || '').toLowerCase();
+        if (!target && (alt.includes('popcorn') || alt.includes('pop corn') || alt.includes('popcorn'))) {
+          target = img;
+        }
+      });
+      if (!target) {
+        target = this.snackImgs && this.snackImgs.first ? this.snackImgs.first.nativeElement : null;
+      }
+
+      if (target) {
+        if (target.complete && target.naturalWidth !== 0) {
+          this.applyTitleColorFromImage(target);
+        } else {
+          // target is not null here due to the outer check; assert non-null to satisfy TS
+          target.addEventListener('load', () => this.applyTitleColorFromImage(target as HTMLImageElement));
+        }
+      }
+    }, 0);
+  }
+
+  private applyTitleColorFromImage(img: HTMLImageElement) {
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const w = 20; const h = 20; // small sample
+      canvas.width = w; canvas.height = h;
+      // draw the image scaled to small canvas
+      // try to avoid tainting by setting crossOrigin if possible
+      try { (img as any).crossOrigin = 'anonymous'; } catch {}
+      ctx.drawImage(img, 0, 0, w, h);
+      const data = ctx.getImageData(0, 0, w, h).data;
+      let r = 0, g = 0, b = 0, count = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i]; g += data[i+1]; b += data[i+2];
+        count++;
+      }
+      r = Math.round(r / count); g = Math.round(g / count); b = Math.round(b / count);
+      const rgb = `rgb(${r}, ${g}, ${b})`;
+      document.documentElement.style.setProperty('--catalog-title-bg', rgb);
+      // compute readable foreground color (black or white) based on luminance
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+      const fg = luminance > 186 ? '#111827' : '#ffffff';
+      document.documentElement.style.setProperty('--catalog-title-foreground', fg);
+    } catch (e) {
+      // ignore errors
+    }
+  }
 
   addToCart(snack: any) {
     this.cart.addToCart(snack);
