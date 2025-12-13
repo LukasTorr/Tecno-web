@@ -93,13 +93,18 @@
 .cart-button:hover {
   background-color: #1d4ed8;
 }
+
+
 .page-title {
-  text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 30px;
-  color: #1e3a8a; /* Azul bonito */
+  margin: 0;
+  color: #28242c;
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 12px;
 }
 
 /* === SIDEBAR DEL CARRITO === */
