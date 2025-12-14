@@ -1,46 +1,99 @@
 <div class="cart-container">
-  <div class="cart-header">
-    <h2 class="cart-title">Mi Carrito</h2>
-    <button class="close-btn" (click)="close.emit()">&times;</button>
-  </div>
-
   <div class="cart-items">
-    <div *ngIf="items.length === 0" class="empty-cart">
-      <p>Tu carrito está vacío</p>
     </div>
-    
-    <div *ngFor="let item of items" class="cart-item">
-      <div class="item-media">
-        <img [src]="item.image" alt="{{ item.name }}" class="item-image">
-        <div class="item-controls">
-          <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity - 1)">−</button>
-          <input type="number" [value]="item.quantity" class="qty-input" #qtyInput (change)="updateQuantity(item.id, +qtyInput.value)">
-          <button class="qty-btn" (click)="updateQuantity(item.id, item.quantity + 1)">+</button>
-        </div>
-      </div>
-
-      <div class="item-info">
-        <h3 class="item-name" title="{{ item.name }}">{{ item.name }}</h3>
-        <p class="item-price">${{ item.price | number: '1.0-0' }}</p>
-      </div>
-
-      <div class="item-subtotal">
-        <span>${{ (item.price * item.quantity) | number: '1.0-0' }}</span>
-      </div>
-      
-      <button class="remove-btn" (click)="removeItem(item.id)">&times;</button>
-    </div>
-  </div>
 
   <div *ngIf="items.length > 0" class="cart-footer">
     <div class="cart-total">
-      <span class="total-label">Total:</span>
-      <span class="total-amount">${{ total | number: '1.0-0' }}</span>
+      <span class="total-label">Total Snacks:</span>
+      <span class="total-amount">{{ total | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</span>
+    </div>
+    
+    <div *ngIf="totalReservaAsientos > 0" class="cart-total" style="border: 1px dashed #2563eb; background-color: #eef2ff; margin-bottom: 5px;">
+        <span class="total-label" style="font-weight: normal; font-size: 0.9rem;">Tickets Asientos:</span>
+        <span class="total-amount" style="font-size: 1rem;">{{ totalReservaAsientos | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</span>
+    </div>
+    
+    <div *ngIf="totalReservaAsientos > 0" class="cart-total" style="border: 2px solid #38a169; background-color: #f0fdf4;">
+        <span class="total-label">GRAN TOTAL:</span>
+        <span class="total-amount">{{ (total + totalReservaAsientos) | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</span>
     </div>
     
     <div class="cart-actions">
       <button class="clear-btn" (click)="clearCart()">Vaciar Carrito</button>
-      <button class="checkout-btn" (click)="checkout()">Comprar Ahora</button>
+      <button class="checkout-btn" (click)="openCheckoutModal()">Comprar Ahora</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal d-block" *ngIf="showPaymentModal" style="background-color: rgba(0,0,0,0.5); position: fixed; z-index: 1002;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Finalizar Reserva y Pago</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="showPaymentModal = false"></button>
+      </div>
+      <div class="modal-body">
+        
+        <h4 class="mb-3">Resumen del Pedido</h4>
+        <div *ngIf="tempReserva" class="alert alert-info p-3 mb-3">
+            <h6 class="fw-bold mb-1">{{ tempReserva.pelicula }} ({{ tempReserva.sala }})</h6>
+            <p class="small mb-1">Función: {{ tempReserva.fecha }} - {{ tempReserva.hora }}</p>
+            <p class="small">Asientos: {{ tempReserva.asientos.join(', ') }}</p>
+            <div class="d-flex justify-content-between border-top pt-2">
+                <span class="fw-bold">Tickets:</span>
+                <span>{{ totalReservaAsientos | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span class="fw-bold">Snacks:</span>
+                <span>{{ total | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</span>
+            </div>
+            <div class="d-flex justify-content-between mt-2 pt-2 border-top border-dark">
+                <span class="fw-bolder">TOTAL FINAL:</span>
+                <span class="text-danger fw-bolder">{{ (total + totalReservaAsientos) | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</span>
+            </div>
+        </div>
+        
+        
+        <hr>
+        
+        <p class="fw-bold">Selecciona tu método de pago:</p>
+
+        <div *ngIf="metodosPago.length > 0; else noMetodos">
+            <div 
+                *ngFor="let metodo of metodosPago" 
+                class="card mb-2 p-2"
+                [ngClass]="{'border-primary shadow': selectedMetodo?.id === metodo.id}"
+                (click)="selectedMetodo = metodo"
+                style="cursor: pointer;"
+            >
+                <div class="d-flex align-items-center">
+                    <img [src]="metodo.icono" width="40" class="me-3" />
+                    <div>
+                        <strong>{{ metodo.tipo }}</strong> <br />
+                        **** **** **** {{ metodo.ultima4 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <ng-template #noMetodos>
+            <div class="alert alert-warning text-center">
+                No has agregado métodos de pago. Agrégalo en la sección "Perfil > Métodos de Pago".
+            </div>
+        </ng-template>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showPaymentModal = false">Cancelar</button>
+        <button 
+            type="button" 
+            class="btn btn-success" 
+            [disabled]="!selectedMetodo"
+            (click)="processPayment()"
+        >
+            Pagar {{ (total + totalReservaAsientos) | currency:'CLP':'symbol':'1.0-0':'es-CL' }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

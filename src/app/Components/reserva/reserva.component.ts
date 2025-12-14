@@ -7,7 +7,8 @@ import { Location } from '@angular/common';
 // 🔑 Servicios necesarios
 import { SalasService, Sala } from '../../services/salas/salas.service'; 
 import { AuthService } from '../../services/auth.service'; 
-import { ReservationService, Reservation } from '../../services/reserva/reservation.service'; 
+// 🔑 Importamos las nuevas interfaces del servicio
+import { ReservationService, Reservation, TempReservation } from '../../services/reserva/reservation.service'; 
 
 interface Asiento {
   fila: number;
@@ -33,6 +34,7 @@ export class ReservaComponent implements OnInit {
   
   private salasDisponibles: Sala[] = []; 
   
+  // 🔑 ADICIÓN CLAVE: Precio dinámico del ticket
   private precioTicketBase = 0; 
 
   constructor(
@@ -60,6 +62,7 @@ export class ReservaComponent implements OnInit {
     });
   }
   
+  // 🔑 NUEVA FUNCIÓN: Busca y asigna el precio del ticket de la sala
   establecerPrecioBase(nombreSala: string): void {
       const salaConfig = this.salasDisponibles.find(s => s.nombre === nombreSala);
       // Asigna el precio o usa 5000 CLP como respaldo si no se encuentra
@@ -92,51 +95,10 @@ export class ReservaComponent implements OnInit {
     }
   }
 
-  reservar(): void {
-    
-    const usuario = this.authService.getUsuario();
-    if (!usuario) {
-        alert('Error: Debes estar logueado para completar la reserva.');
-        return;
-    }
-    
-    const seleccionados = this.asientos.flat().filter(a => a.seleccionado);
-    if (seleccionados.length === 0) {
-      alert('Selecciona al menos un asiento antes de reservar.');
-      return;
-    }
-
-    const listaAsientos = seleccionados.map(a => 
-        `Fila ${String.fromCharCode(65 + a.fila)}, Columna ${a.columna + 1}`
-    );
-    
-    const totalPagar = seleccionados.length * this.precioTicketBase;
-
-    const nuevaReserva: Reservation = {
-        id: 0,
-        userEmail: usuario.email,
-        pelicula: this.tituloPelicula,
-        sala: this.salaActual,
-        fecha: new Date().toISOString().split('T')[0],
-        hora: this.horaActual,
-        asientos: listaAsientos,
-        totalSnacks: 0, 
-        totalPagar: totalPagar // 🔑 ESTE VALOR ES CLAVE Y SE ESTÁ CALCULANDO CORRECTAMENTE
-    };
-
-    this.reservationService.saveReservation(nuevaReserva);
-    
-    seleccionados.forEach(a => {
-        a.ocupado = true;
-        a.seleccionado = false;
-    });
-    
-    // MENSAJE DE CONFIRMACIÓN
-    const formatoCLP = totalPagar.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
-    alert(`Reservaste ${seleccionados.length} asiento(s) para "${this.tituloPelicula}" en la Sala: ${this.salaActual} a las ${this.horaActual}. Total: ${formatoCLP}. ¡Ticket generado!`);
-    
-    this.cargarReservas(); 
-  }
+  // ❌ ELIMINADA: La función 'reservar' antigua, que guardaba directamente.
+  // Ahora usaremos 'guardarAsientosTemporalmente' para el flujo de snacks.
+  // 
+  // Si el botón en el HTML se llama 'Confirmar Reserva', debe llamar a irAComprarSnacks().
 
   cargarReservas(): void {
     this.asientos.flat().forEach(a => {
@@ -171,7 +133,41 @@ export class ReservaComponent implements OnInit {
     asiento.seleccionado = !asiento.seleccionado;
   }
   
+  // 🔑 MODIFICADO: Esta es la función que el botón "Continuar/Ir a Snacks" debe llamar
   irAComprarSnacks(): void {
+    const usuario = this.authService.getUsuario();
+    if (!usuario) {
+        alert('Error: Debes estar logueado para continuar.');
+        return;
+    }
+    
+    const seleccionados = this.asientos.flat().filter(a => a.seleccionado);
+    if (seleccionados.length === 0) {
+      alert('Selecciona al menos un asiento antes de continuar.');
+      return;
+    }
+
+    const listaAsientos = seleccionados.map(a => 
+        `Fila ${String.fromCharCode(65 + a.fila)}, Columna ${a.columna + 1}`
+    );
+    
+    // 🔑 CALCULAR COSTO SOLO DE ASIENTOS
+    const totalAsientos = seleccionados.length * this.precioTicketBase;
+
+    const tempReservationData: TempReservation = {
+        pelicula: this.tituloPelicula,
+        sala: this.salaActual,
+        fecha: new Date().toISOString().split('T')[0],
+        hora: this.horaActual,
+        asientos: listaAsientos,
+        totalAsientos: totalAsientos, // Costo solo de asientos
+        userEmail: usuario.email,
+    };
+
+    // 1. Guardar la selección temporalmente
+    this.reservationService.setTempReservation(tempReservationData);
+    
+    // 2. Redirigir a la compra de snacks (donde ocurrirá el pago final)
     this.router.navigate(['/snacks']);
   }
 

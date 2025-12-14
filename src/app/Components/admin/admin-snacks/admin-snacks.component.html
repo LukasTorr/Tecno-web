@@ -3,7 +3,7 @@
     <p class="text-muted">Administra los productos de confitería, precios y stock.</p>
 
     <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-success">➕ Agregar Nuevo Snack</button>
+        <button class="btn btn-success" (click)="openCreateModal()">➕ Agregar Nuevo Snack</button>
     </div>
 
     <table class="table table-striped table-bordered">
@@ -11,6 +11,7 @@
             <tr>
                 <th>ID</th>
                 <th>Nombre</th>
+                <th>Imagen</th>
                 <th>Precio</th>
                 <th>Stock</th>
                 <th>Acciones</th>
@@ -20,13 +21,61 @@
             <tr *ngFor="let snack of snacks">
                 <td>{{ snack.id }}</td>
                 <td>{{ snack.nombre }}</td>
-                <td>${{ snack.precio | number: '1.0-0' }}</td>
+                <td>
+                    <img [src]="snack.imageUrl" alt="{{ snack.nombre }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                </td>
+                <td>{{ snack.precio | currency:'CLP':'symbol':'1.0-0':'es-CL' }}</td>
                 <td>{{ snack.stock }}</td>
                 <td>
-                    <button class="btn btn-sm btn-info me-2">Editar</button>
-                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                    <button class="btn btn-sm btn-info me-2" (click)="openEditModal(snack)">Editar</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteSnack(snack.id)">Eliminar</button>
                 </td>
             </tr>
         </tbody>
     </table>
+</div>
+
+
+
+<div class="modal d-block" *ngIf="showModal" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content" *ngIf="currentSnack">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ currentSnack.id > 0 ? 'Editar Snack' : 'Crear Nuevo Snack' }}</h5>
+        <button type="button" class="btn-close" (click)="showModal = false"></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="mb-3">
+          <label class="form-label">Nombre del Producto</label>
+          <input type="text" class="form-control" [(ngModel)]="currentSnack.nombre">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Precio (CLP)</label>
+            <input type="number" class="form-control" [(ngModel)]="currentSnack.precio" min="100">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Stock Disponible</label>
+            <input type="number" class="form-control" [(ngModel)]="currentSnack.stock" min="0">
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">URL de Imagen</label>
+            <input type="text" class="form-control" [(ngModel)]="currentSnack.imageUrl" placeholder="Ej: assets/image/snacks/popcorn.jpg">
+            
+            <div *ngIf="currentSnack.imageUrl" class="mt-2 text-center border p-2">
+                <p class="text-muted small mb-1">Vista Previa:</p>
+                <img [src]="currentSnack.imageUrl" alt="Preview" style="max-width: 100px; height: auto; object-fit: cover;">
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showModal = false">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="saveSnack()">Guardar Snack</button>
+      </div>
+    </div>
+  </div>
 </div>
