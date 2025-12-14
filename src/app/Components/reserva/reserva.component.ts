@@ -3,10 +3,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'; 
 import { Location } from '@angular/common'; 
-// 🔑 VERIFICAR RUTA: Asumiendo que el servicio está en src/app/services/
-// ReservaComponent está en src/app/Components/reserva/
-import { SalasService, Sala } from '../../services/salas/salas.service'; 
 
+// 🔑 Servicios necesarios
+import { SalasService, Sala } from '../../services/salas/salas.service'; 
+import { AuthService } from '../../services/auth.service'; 
+import { ReservationService, Reservation } from '../../services/reserva/reservation.service'; 
 
 interface Asiento {
   fila: number;
@@ -31,18 +32,20 @@ export class ReservaComponent implements OnInit {
   asientos: Asiento[][] = [];
   
   private salasDisponibles: Sala[] = []; 
+  
+  private precioTicketBase = 0; 
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    // 🔑 INYECTAR EL SERVICIO DE SALAS
-    private salasService: SalasService 
+    private salasService: SalasService,
+    private authService: AuthService,
+    private reservationService: ReservationService 
   ) {}
 
   ngOnInit(): void {
     
-    // 1. Cargar las salas ANTES de procesar los queryParams
     this.salasDisponibles = this.salasService.getSalasList(); 
     
     this.route.queryParams.subscribe(params => {
@@ -50,22 +53,24 @@ export class ReservaComponent implements OnInit {
       this.salaActual = params['sala'] || 'Sala desconocida'; 
       this.horaActual = params['hora'] || 'Hora no especificada'; 
       
-      // 2. Generar asientos usando la capacidad DINÁMICA
+      this.establecerPrecioBase(this.salaActual);
+      
       this.generarAsientosCondicionales(this.salaActual);
       this.cargarReservas();
     });
   }
+  
+  establecerPrecioBase(nombreSala: string): void {
+      const salaConfig = this.salasDisponibles.find(s => s.nombre === nombreSala);
+      // Asigna el precio o usa 5000 CLP como respaldo si no se encuentra
+      this.precioTicketBase = salaConfig ? salaConfig.precioBase : 5000; 
+  }
 
-  // 🔑 MODIFICADO: Genera asientos buscando la capacidad en el array de salas
   generarAsientosCondicionales(nombreSala: string): void {
-    
-    // Buscar la sala configurada por el administrador (la clave de búsqueda es el nombre)
     const salaConfiguracion = this.salasDisponibles.find(
         sala => sala.nombre === nombreSala
     );
     
-    // 🔑 LOGICA DE FALLBACK Y ASIGNACIÓN
-    // Usar la configuración encontrada o un valor seguro por defecto (8x12)
     const filas = salaConfiguracion ? salaConfiguracion.filas : 8;
     const columnas = salaConfiguracion ? salaConfiguracion.columnas : 12;
 
@@ -85,15 +90,15 @@ export class ReservaComponent implements OnInit {
       }
       this.asientos.push(fila);
     }
-    
-    // 💡 IMPORTANTE: Si la sala no se encuentra, es probable que no se haya inicializado 
-    // correctamente en el panel de administración o el SalasService.
-    if (!salaConfiguracion) {
-        console.warn(`[ReservaComponent] Sala "${nombreSala}" no encontrada en el servicio. Usando 8x12 por defecto.`);
-    }
   }
 
   reservar(): void {
+    
+    const usuario = this.authService.getUsuario();
+    if (!usuario) {
+        alert('Error: Debes estar logueado para completar la reserva.');
+        return;
+    }
     
     const seleccionados = this.asientos.flat().filter(a => a.seleccionado);
     if (seleccionados.length === 0) {
@@ -101,47 +106,63 @@ export class ReservaComponent implements OnInit {
       return;
     }
 
-    const reservas = this.obtenerReservas();
+    const listaAsientos = seleccionados.map(a => 
+        `Fila ${String.fromCharCode(65 + a.fila)}, Columna ${a.columna + 1}`
+    );
+    
+    const totalPagar = seleccionados.length * this.precioTicketBase;
+
+    const nuevaReserva: Reservation = {
+        id: 0,
+        userEmail: usuario.email,
+        pelicula: this.tituloPelicula,
+        sala: this.salaActual,
+        fecha: new Date().toISOString().split('T')[0],
+        hora: this.horaActual,
+        asientos: listaAsientos,
+        totalSnacks: 0, 
+        totalPagar: totalPagar // 🔑 ESTE VALOR ES CLAVE Y SE ESTÁ CALCULANDO CORRECTAMENTE
+    };
+
+    this.reservationService.saveReservation(nuevaReserva);
     
     seleccionados.forEach(a => {
-      reservas.push({
-        movie: this.tituloPelicula,
-        fila: a.fila,
-        columna: a.columna,
-        sala: this.salaActual, 
-        hora: this.horaActual  
-      });
+        a.ocupado = true;
+        a.seleccionado = false;
     });
-
-    localStorage.setItem('reservas', JSON.stringify(reservas));
     
-    seleccionados.forEach(a => (a.ocupado = true));
-    alert(`Reservaste ${seleccionados.length} asiento(s) para "${this.tituloPelicula}" en la Sala: ${this.salaActual} a las ${this.horaActual}.`);
+    // MENSAJE DE CONFIRMACIÓN
+    const formatoCLP = totalPagar.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
+    alert(`Reservaste ${seleccionados.length} asiento(s) para "${this.tituloPelicula}" en la Sala: ${this.salaActual} a las ${this.horaActual}. Total: ${formatoCLP}. ¡Ticket generado!`);
     
     this.cargarReservas(); 
   }
 
-  obtenerReservas(): any[] {
-    return JSON.parse(localStorage.getItem('reservas') || '[]');
-  }
- 
   cargarReservas(): void {
-    // Primero, reinicializar el estado de la reserva
     this.asientos.flat().forEach(a => {
       a.ocupado = false;
       a.seleccionado = false;
     });
       
-    const reservas = this.obtenerReservas();
-    const reservasPelicula = reservas.filter(
-        r => r.movie === this.tituloPelicula && r.sala === this.salaActual 
-    );
+    const reservasPelicula = this.reservationService.getAllReservations()
+        .filter(r => 
+            r.pelicula === this.tituloPelicula && 
+            r.sala === this.salaActual &&
+            r.hora === this.horaActual 
+        );
 
     reservasPelicula.forEach(r => {
-      // Asegurar que las coordenadas existan antes de marcar
-      if (r.fila < this.filas && r.columna < this.columnas) { 
-        this.asientos[r.fila][r.columna].ocupado = true;
-      }
+        r.asientos.forEach(asientoStr => {
+            const parts = asientoStr.match(/Fila ([A-Z]), Columna (\d+)/);
+            if (parts) {
+                const filaIndex = parts[1].charCodeAt(0) - 65; 
+                const columnaIndex = parseInt(parts[2]) - 1;   
+                
+                if (filaIndex >= 0 && filaIndex < this.filas && columnaIndex >= 0 && columnaIndex < this.columnas) {
+                    this.asientos[filaIndex][columnaIndex].ocupado = true;
+                }
+            }
+        });
     });
   }
 

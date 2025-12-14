@@ -3,7 +3,7 @@
     class="bg-light p-4 rounded-4 shadow-sm mx-auto"
     style="max-width: 600px"
   >
-    <h3 class="text-center mb-4">Mis Reservas</h3>
+    <h3 class="text-center mb-4">Mis Reservas ({{ reservas.length }} tickets)</h3>
 
     <div *ngIf="reservas.length > 0; else sinReservas">
       <div
@@ -12,18 +12,36 @@
       >
         <div class="card-body">
           <h4 class="card-title mb-2">{{ reserva.pelicula }}</h4>
+          <h5 class="text-muted mb-3">{{ reserva.sala }}</h5> 
+          
+          <p class="card-text mb-1">
+            <strong>ID de Ticket:</strong> #{{ reserva.id }}
+          </p>
 
           <p class="card-text mb-1">
-            <strong>Fecha:</strong> {{ reserva.fecha }}
+            <strong>Fecha de Función:</strong> {{ reserva.fecha }}
           </p>
 
           <p class="card-text mb-1">
             <strong>Hora:</strong> {{ reserva.hora }}
           </p>
 
-          <p class="card-text mb-0">
-            <strong>Asientos:</strong> {{ reserva.asientos.join(", ") }}
+          <p class="card-text mb-3">
+            <strong>Asientos:</strong> <span class="badge bg-warning text-dark">{{ reserva.asientos.join(", ") }}</span>
           </p>
+          
+          <hr>
+          
+          <p class="card-text mb-1">
+            <strong>Total Snacks:</strong> {{ reserva.totalSnacks | currency:'CLP':'symbol':'1.0-0':'es-CL' }}
+          </p>
+          <p class="card-text mb-0">
+            <strong>TOTAL PAGADO:</strong> 
+            <span class="text-danger fw-bold">
+                {{ reserva.totalPagar | currency:'CLP':'symbol':'1.0-0':'es-CL' }}
+            </span>
+          </p>
+
         </div>
       </div>
     </div>

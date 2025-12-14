@@ -1,10 +1,13 @@
 // app.module.ts
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core'; // 🔑 AÑADIDO: LOCALE_ID
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms'; 
-import { ReactiveFormsModule } from '@angular/forms'; // Traemos de la rama perfil
-import { CommonModule } from '@angular/common'; // Traemos de la rama perfil
+import { ReactiveFormsModule } from '@angular/forms'; 
+import { CommonModule, registerLocaleData } from '@angular/common'; // 🔑 AÑADIDO: registerLocaleData
 
+// 🔑 AÑADIDO: Importar y registrar los datos de la Locale para Chile (CLP)
+import localeEsCl from '@angular/common/locales/es-CL';
+registerLocaleData(localeEsCl); 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component'; 
@@ -21,7 +24,7 @@ import { AdminUsuariosComponent } from './Components/admin/admin-usuario/admin-u
 import { AdminPeliculasComponent } from './Components/admin/admin-peliculas/admin-peliculas.component';
 import { AdminSalasComponent } from './Components/admin/admin-salas/admin-salas.component';
 import { AdminSnacksComponent } from './Components/admin/admin-snacks/admin-snacks.component'; 
-// Componentes de Perfil (Tomado de la rama perfil)
+// Componentes de Perfil
 import { PerfilUsuarioComponent } from './Components/perfil-usuario/perfil-usuario.component';
 import { SidebarComponent } from './Components/sidebar/sidebar.component';
 import { PerfilCardComponent } from './Components/perfil-usuario/perfil-card/perfil-card.component';
@@ -62,12 +65,13 @@ import { MetodosPagoListComponent } from './Components/perfil-usuario/metodos-pa
     BrowserModule,
     AppRoutingModule,
     FormsModule, 
-    ReactiveFormsModule, // Añadido de perfil
-    CommonModule,      // Añadido de perfil
+    ReactiveFormsModule, 
+    CommonModule // Mantener CommonModule si es necesario para otros módulos compartidos, aunque BrowserModule ya lo contiene.
   ],
   providers: [
-    // ❌ IMPORTANTE: Eliminamos AppComponent de providers para evitar el error de inyección
-  ], 
+    // 🔑 AÑADIDO: Configura la locale globalmente a 'es-CL'
+    { provide: LOCALE_ID, useValue: 'es-CL' } 
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

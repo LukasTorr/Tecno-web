@@ -9,9 +9,11 @@ import { Sala, SalasService } from '../../../services/salas/salas.service';
 export class AdminSalasComponent implements OnInit {
   salas: Sala[] = [];
   
-  // Variables para la gestión del modal
   showModal: boolean = false;
   currentSala: Sala | null = null;
+  
+  // 🔑 Propiedad para editar el precio en el modal (separada del objeto principal)
+  modalPrecioBase: number = 0; 
 
   constructor(private salasService: SalasService) {}
 
@@ -26,29 +28,36 @@ export class AdminSalasComponent implements OnInit {
   // --- CRUD FUNCTIONS ---
 
   openCreateModal(): void {
-    // Inicializa una sala vacía con filas y columnas a 0
+    // 🔑 Inicializa con precioBase para satisfacer la interfaz y el valor CLP base
     this.currentSala = { 
         id: 0, 
         nombre: '', 
         capacidad: 0, 
         formato: '2D/Estándar', 
         filas: 0, 
-        columnas: 0 
+        columnas: 0,
+        precioBase: 5000 // 🔑 VALOR BASE INICIAL
     };
+    this.modalPrecioBase = 5000; // Sincroniza el campo del modal
     this.showModal = true;
   }
 
   openEditModal(sala: Sala): void {
-    // Usar spread para evitar modificar el objeto original antes de guardar
+    // Clonar la sala para editar
     this.currentSala = { ...sala }; 
+    // 🔑 SINCRONIZACIÓN: Carga el precio actual de la sala en el campo de edición
+    this.modalPrecioBase = sala.precioBase; 
     this.showModal = true;
   }
 
   saveSala(): void {
     if (this.currentSala) {
-        // Validación básica
-        if (!this.currentSala.nombre || this.currentSala.filas <= 0 || this.currentSala.columnas <= 0) {
-            alert('El nombre, las filas y las columnas deben ser valores válidos.');
+        // 🔑 ASIGNACIÓN CLAVE: Mueve el precio editado del modal al objeto principal
+        this.currentSala.precioBase = this.modalPrecioBase; 
+        
+        // 🔑 VALIDACIÓN: Asegurar que el precio es positivo
+        if (!this.currentSala.nombre || this.currentSala.filas <= 0 || this.currentSala.columnas <= 0 || this.currentSala.precioBase <= 0) {
+            alert('El nombre, las dimensiones y el precio base deben ser valores positivos y válidos.');
             return;
         }
 
@@ -60,7 +69,6 @@ export class AdminSalasComponent implements OnInit {
   }
 
   deleteSala(id: number): void {
-    // Muestra confirmación usando los últimos 4 dígitos del ID para consistencia visual
     if (confirm(`¿Estás seguro de que quieres eliminar la sala con ID de referencia ${id.toString().slice(-4)}?`)) {
         this.salasService.deleteSala(id);
         this.loadSalas();
