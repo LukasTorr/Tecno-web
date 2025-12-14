@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { Usuario } from 'src/app/models/usuario.model';
+import { User } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-perfil-reservas',
@@ -8,7 +8,7 @@ import { Usuario } from 'src/app/models/usuario.model';
   styleUrls: ['./perfil-reservas.component.css'],
 })
 export class PerfilReservasComponent implements OnInit {
-  @Input() usuario: Usuario | null = null;
+  @Input() usuario: User | null = null;
   reservas: any[] = [];
 
   constructor(private authService: AuthService) {}

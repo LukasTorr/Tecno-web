@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { Usuario } from 'src/app/models/usuario.model';
+// 🔑 Importar UserService y el modelo completo User
+import { UserService, User } from 'src/app/services/user/user.service'; 
+// ❌ ELIMINAR: import { Usuario } from 'src/app/models/usuario.model';
 
 @Component({
   selector: 'app-perfil-info',
@@ -8,10 +10,12 @@ import { Usuario } from 'src/app/models/usuario.model';
   styleUrls: ['./perfil-info.component.css'],
 })
 export class PerfilInfoComponent {
-  @Input() usuario: Usuario | null = null;
+  // 🔑 CAMBIO CLAVE: El Input ahora es de tipo User
+  @Input() usuario: User | null = null; 
   editando: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  // 🔑 Inyectar UserService
+  constructor(private authService: AuthService, private userService: UserService) {}
 
   activarEdicion(): void {
     this.editando = true;
@@ -19,14 +23,19 @@ export class PerfilInfoComponent {
 
   guardarCambios(): void {
     if (this.usuario) {
-      this.authService.actualizarUsuario(this.usuario);
+      // 🔑 CORRECCIÓN: Llamar a UserService
+      this.userService.actualizarUsuario(this.usuario);
       alert('Datos actualizados con éxito');
       this.editando = false;
     }
   }
 
   cancelar(): void {
-    this.usuario = this.authService.getUsuario(); // recarga los valores originales
     this.editando = false;
+    // 🔑 CORRECCIÓN: Recargar los valores originales desde UserService (para deshacer cambios)
+    const session = this.authService.getUsuario();
+    if (session) {
+        this.usuario = this.userService.getUserByEmail(session.email) || this.usuario;
+    }
   }
 }

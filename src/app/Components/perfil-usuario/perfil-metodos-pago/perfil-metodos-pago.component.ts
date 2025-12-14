@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { FormsModule } from '@angular/forms';
-import { Usuario } from '../../../models/usuario.model';
+// 🔑 Importar UserService y el modelo completo User
+import { UserService, User } from '../../../services/user/user.service'; 
+// ❌ ELIMINAR: import { Usuario } from '../../../models/usuario.model';
 
 @Component({
   selector: 'app-metodos-pago',
@@ -9,51 +11,19 @@ import { Usuario } from '../../../models/usuario.model';
   styleUrls: ['./perfil-metodos-pago.component.css'],
 })
 export class PerfilMetodosPagoComponent implements OnInit {
-  usuario: Usuario | null = null;
+  // 🔑 CAMBIO CLAVE: Usaremos la interfaz completa 'User'
+  usuario: User | null = null; 
 
-  constructor(private authService: AuthService) {}
-
-  ngOnInit(): void {
-    this.usuario = this.authService.getUsuario();
-  }
-}
-
-/** 
-export class PerfilMetodosPagoComponent implements OnInit {
-  tarjetas: Tarjeta[] = [];
-  nuevaTarjeta: Partial<Tarjeta> = {};
+  // 🔑 Inyectar UserService
+  constructor(private authService: AuthService, private userService: UserService) {}
 
   ngOnInit(): void {
-    const data = localStorage.getItem('tarjetas');
-    this.tarjetas = data ? JSON.parse(data) : [];
+    // 🔑 CORRECCIÓN: Usar el email de la sesión para buscar el usuario completo
+    const session = this.authService.getUsuario();
+    if (session) {
+      this.usuario = this.userService.getUserByEmail(session.email) || null;
+    }
   }
 
-  guardarTarjetas() {
-    localStorage.setItem('tarjetas', JSON.stringify(this.tarjetas));
-  }
-
-  agregarTarjeta() {
-    if (!this.nuevaTarjeta.numero || this.nuevaTarjeta.numero.length < 16)
-      return;
-
-    const tarjeta: Tarjeta = {
-      id: Date.now(),
-      numero: this.nuevaTarjeta.numero,
-      titular: this.nuevaTarjeta.titular!,
-      exp: this.nuevaTarjeta.exp!,
-      cvv: this.nuevaTarjeta.cvv!,
-      ultimos4: this.nuevaTarjeta.numero.slice(-4),
-    };
-
-    this.tarjetas.push(tarjeta);
-    this.guardarTarjetas();
-
-    this.nuevaTarjeta = {};
-  }
-
-  eliminarTarjeta(id: number) {
-    this.tarjetas = this.tarjetas.filter((t) => t.id !== id);
-    this.guardarTarjetas();
-  }
+  // ... (el resto del código comentado o no se modifica) ...
 }
-*/
