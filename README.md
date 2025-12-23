@@ -1,27 +1,53 @@
-# ProyectoCine
+Regal Cinemas
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+Regal Cinemas es una plataforma integral de gestión cinematográfica diseñada para ofrecer una experiencia de usuario fluida y una administración potente. Desde la selección dinámica de asientos hasta la compra integrada de snacks y la gestión avanzada de salas, este sistema cubre todo el flujo operativo de un cine moderno.
+Características Principales
+Experiencia del Cliente
 
-## Development server
+    Reservas Inteligentes: Selección de asientos en tiempo real con bloqueo visual de disponibilidad por función.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+    Catálogo de Snacks Dinámico: Interfaz inmersiva para selección de confitería con actualización automática de colores basada en el producto.
 
-## Code scaffolding
+    Carrito de Compras Unificado: Proceso de pago único que integra tickets de cine y productos de cafetería.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+    Perfil de Usuario: Gestión de métodos de pago (Tarjetas de Crédito/Débito) e historial detallado de reservas con soporte para moneda local en CLP.
 
-## Build
+Panel de Administración
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+    Gestión de Salas: Configuración técnica de salas (IMAX, VIP, Estándar) definiendo dimensiones de filas, columnas y precios base.
 
-## Running unit tests
+    Control de Inventario: CRUD completo para el catálogo de snacks, permitiendo ajustar precios y stock en tiempo real.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+    Administración de Usuarios: Control centralizado de perfiles y roles del sistema.
 
-## Running end-to-end tests
+Tecnologías Utilizadas
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+    Frontend: Angular 15.2.11.
 
-## Further help
+    Lenguaje: TypeScript.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+    Estilos: Bootstrap 5 y CSS3 personalizado.
+
+    Estado y Persistencia: RxJS (BehaviorSubjects) para el carrito y LocalStorage/SessionStorage para persistencia de datos local.
+
+    Internacionalización: Soporte nativo para moneda chilena (es-CL).
+
+Instalación y Configuración
+
+Para poner en marcha el proyecto localmente, sigue estos pasos:
+
+    Clonar el repositorio:
+    Bash
+
+git clone https://github.com/tu-usuario/ProyectoCine.git
+cd ProyectoCine
+
+Instalar dependencias:
+Bash
+
+npm install
+
+Servidor de desarrollo: Ejecuta el siguiente comando y navega a http://localhost:4200/.
+Bash
+
+ng serve
